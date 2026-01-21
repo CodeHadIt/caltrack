@@ -129,66 +129,58 @@ CREATE TRIGGER on_auth_user_created
 
 -- Insert default categories
 INSERT INTO food_categories (id, name, icon, color) VALUES
-  ('00000000-0000-0000-0000-000000000001', 'Proteins', '🥩', '#ef4444'),
-  ('00000000-0000-0000-0000-000000000002', 'Carbs', '🍚', '#f59e0b'),
-  ('00000000-0000-0000-0000-000000000003', 'Fruits', '🍎', '#22c55e'),
-  ('00000000-0000-0000-0000-000000000004', 'Vegetables', '🥬', '#10b981'),
-  ('00000000-0000-0000-0000-000000000005', 'Dairy', '🥛', '#3b82f6'),
-  ('00000000-0000-0000-0000-000000000006', 'Snacks', '🍿', '#8b5cf6')
+  ('00000000-0000-0000-0000-000000000001', 'Carbs', '🍚', '#f59e0b'),
+  ('00000000-0000-0000-0000-000000000002', 'Proteins', '🥩', '#ef4444'),
+  ('00000000-0000-0000-0000-000000000003', 'Fats', '🥑', '#84cc16'),
+  ('00000000-0000-0000-0000-000000000004', 'Fruits', '🍎', '#22c55e'),
+  ('00000000-0000-0000-0000-000000000005', 'Vegetables', '🥬', '#10b981'),
+  ('00000000-0000-0000-0000-000000000006', 'Dairy', '🥛', '#3b82f6'),
+  ('00000000-0000-0000-0000-000000000007', 'Snacks', '🍿', '#8b5cf6')
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert default foods
 
--- Proteins
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000001', 'Chicken Breast', 165, 31, 0, 3.6, true),
-  ('00000000-0000-0000-0000-000000000001', 'Beef (Lean)', 250, 26, 0, 15, true),
-  ('00000000-0000-0000-0000-000000000001', 'Salmon', 208, 20, 0, 13, true),
-  ('00000000-0000-0000-0000-000000000001', 'Eggs', 155, 13, 1.1, 11, true),
-  ('00000000-0000-0000-0000-000000000001', 'Tofu', 76, 8, 1.9, 4.8, true),
-  ('00000000-0000-0000-0000-000000000001', 'Tuna', 132, 29, 0, 1, true),
-  ('00000000-0000-0000-0000-000000000001', 'Shrimp', 99, 24, 0.2, 0.3, true);
-
 -- Carbs
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000002', 'White Rice (cooked)', 130, 2.7, 28, 0.3, true),
-  ('00000000-0000-0000-0000-000000000002', 'Brown Rice (cooked)', 112, 2.6, 24, 0.9, true),
-  ('00000000-0000-0000-0000-000000000002', 'Bread (White)', 265, 9, 49, 3.2, true),
-  ('00000000-0000-0000-0000-000000000002', 'Pasta (cooked)', 131, 5, 25, 1.1, true),
-  ('00000000-0000-0000-0000-000000000002', 'Oats', 389, 17, 66, 7, true),
-  ('00000000-0000-0000-0000-000000000002', 'Potato', 77, 2, 17, 0.1, true),
-  ('00000000-0000-0000-0000-000000000002', 'Sweet Potato', 86, 1.6, 20, 0.1, true);
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000001', 'Basmati Rice', 150, 3.5, 32, 0.4, 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000001', 'Ripe Plantain', 122, 1.3, 32, 0.4, 'https://images.unsplash.com/photo-1603052875302-d376b7c0638a?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000001', 'Sweet Potato', 86, 1.6, 20, 0.1, 'https://images.unsplash.com/photo-1596097635121-14b63a7a6c19?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000001', 'Yam', 118, 1.5, 28, 0.2, 'https://images.unsplash.com/photo-1590165482129-1b8b27698780?w=200&h=200&fit=crop', true);
+
+-- Proteins
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000002', 'Chicken Breast', 165, 31, 0, 3.6, 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000002', 'Chicken Thigh', 209, 26, 0, 11, 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000002', 'Turkey Wings', 197, 28, 0, 9, 'https://images.unsplash.com/photo-1574672280600-4accfa5b6f98?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000002', 'Lamb Steak', 250, 25, 0, 16, 'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000002', 'Beef Steak', 271, 26, 0, 18, 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000002', 'Eggs', 155, 13, 1.1, 11, 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=200&h=200&fit=crop', true);
+
+-- Fats
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000003', 'Avocado', 160, 2, 9, 15, 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000003', 'Groundnut', 567, 26, 16, 49, 'https://images.unsplash.com/photo-1567892320421-1c657571ea4a?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000003', 'Cashew Nuts', 553, 18, 30, 44, 'https://images.unsplash.com/photo-1604147706283-d7119b5b822c?w=200&h=200&fit=crop', true);
 
 -- Fruits
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000003', 'Apple', 52, 0.3, 14, 0.2, true),
-  ('00000000-0000-0000-0000-000000000003', 'Banana', 89, 1.1, 23, 0.3, true),
-  ('00000000-0000-0000-0000-000000000003', 'Orange', 47, 0.9, 12, 0.1, true),
-  ('00000000-0000-0000-0000-000000000003', 'Strawberries', 32, 0.7, 8, 0.3, true),
-  ('00000000-0000-0000-0000-000000000003', 'Blueberries', 57, 0.7, 14, 0.3, true),
-  ('00000000-0000-0000-0000-000000000003', 'Grapes', 69, 0.7, 18, 0.2, true);
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000004', 'Banana', 89, 1.1, 23, 0.3, 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000004', 'Apple', 52, 0.3, 14, 0.2, 'https://images.unsplash.com/photo-1584306670957-acf935f5033c?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000004', 'Kiwi', 61, 1.1, 15, 0.5, 'https://images.unsplash.com/photo-1585059895524-72359e06133a?w=200&h=200&fit=crop', true);
 
 -- Vegetables
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000004', 'Broccoli', 34, 2.8, 7, 0.4, true),
-  ('00000000-0000-0000-0000-000000000004', 'Spinach', 23, 2.9, 3.6, 0.4, true),
-  ('00000000-0000-0000-0000-000000000004', 'Carrots', 41, 0.9, 10, 0.2, true),
-  ('00000000-0000-0000-0000-000000000004', 'Cucumber', 16, 0.7, 3.6, 0.1, true),
-  ('00000000-0000-0000-0000-000000000004', 'Tomatoes', 18, 0.9, 3.9, 0.2, true),
-  ('00000000-0000-0000-0000-000000000004', 'Bell Peppers', 31, 1, 6, 0.3, true);
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000005', 'Broccoli', 34, 2.8, 7, 0.4, 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000005', 'Carrots', 41, 0.9, 10, 0.2, 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000005', 'Bell Pepper', 31, 1, 6, 0.3, 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000005', 'Peas', 81, 5, 14, 0.4, 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000005', 'Green Beans', 31, 1.8, 7, 0.1, 'https://images.unsplash.com/photo-1567375698348-5d9d5ae99de0?w=200&h=200&fit=crop', true);
 
 -- Dairy
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000005', 'Whole Milk', 61, 3.2, 4.8, 3.3, true),
-  ('00000000-0000-0000-0000-000000000005', 'Greek Yogurt', 97, 9, 3.6, 5, true),
-  ('00000000-0000-0000-0000-000000000005', 'Cheddar Cheese', 403, 25, 1.3, 33, true),
-  ('00000000-0000-0000-0000-000000000005', 'Cottage Cheese', 98, 11, 3.4, 4.3, true),
-  ('00000000-0000-0000-0000-000000000005', 'Mozzarella', 280, 28, 3.1, 17, true);
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000006', 'Greek Yogurt', 97, 9, 3.6, 5, 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop', true);
 
 -- Snacks
-INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
-  ('00000000-0000-0000-0000-000000000006', 'Almonds', 579, 21, 22, 50, true),
-  ('00000000-0000-0000-0000-000000000006', 'Peanuts', 567, 26, 16, 49, true),
-  ('00000000-0000-0000-0000-000000000006', 'Protein Bar', 350, 25, 35, 12, true),
-  ('00000000-0000-0000-0000-000000000006', 'Dark Chocolate', 546, 5, 60, 31, true),
-  ('00000000-0000-0000-0000-000000000006', 'Popcorn (air-popped)', 387, 13, 78, 4.5, true);
+INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, image_url, is_default) VALUES
+  ('00000000-0000-0000-0000-000000000007', 'Plantain Chips', 519, 2, 58, 31, 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200&h=200&fit=crop', true),
+  ('00000000-0000-0000-0000-000000000007', 'Biscuit', 502, 6, 62, 25, 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&h=200&fit=crop', true);

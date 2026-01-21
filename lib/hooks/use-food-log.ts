@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   addGuestFoodLog,
@@ -10,17 +10,20 @@ import {
   addGuestCustomFood,
   getGuestId,
 } from '@/lib/storage/local-storage'
-import { FoodItem, FoodLog, FoodLogWithItem, MealTime, DailySummary } from '@/types'
+import { FoodItem, FoodLog, FoodLogWithItem, MealTime, DailySummary, FoodCategory } from '@/types'
 import { DEFAULT_FOODS, DEFAULT_CATEGORIES } from '@/lib/constants'
 import { getToday } from '@/lib/utils'
 
 export function useFoodLog(userId: string | null, isGuest: boolean) {
   const [logs, setLogs] = useState<FoodLogWithItem[]>([])
   const [foods, setFoods] = useState<FoodItem[]>([])
+  const [categories, setCategories] = useState<Omit<FoodCategory, 'created_at'>[]>(DEFAULT_CATEGORIES)
   const [isLoading, setIsLoading] = useState(true)
   const supabase = createClient()
 
   const fetchFoods = useCallback(async () => {
+    setIsLoading(true)
+
     if (isGuest) {
       const customFoods = getGuestCustomFoods()
       const defaultFoods = DEFAULT_FOODS.map((food, index) => ({
@@ -30,9 +33,22 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
         created_at: new Date().toISOString(),
       }))
       setFoods([...defaultFoods, ...customFoods])
+      setCategories(DEFAULT_CATEGORIES)
+      setIsLoading(false)
       return [...defaultFoods, ...customFoods]
     }
 
+    // Fetch categories from database
+    const { data: dbCategories } = await supabase
+      .from('food_categories')
+      .select('*')
+      .order('name')
+
+    if (dbCategories) {
+      setCategories(dbCategories)
+    }
+
+    // Fetch foods from database
     const { data: dbFoods } = await supabase
       .from('food_items')
       .select('*')
@@ -41,8 +57,11 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
 
     if (dbFoods) {
       setFoods(dbFoods)
+      setIsLoading(false)
       return dbFoods
     }
+
+    setIsLoading(false)
     return []
   }, [isGuest, userId, supabase])
 
@@ -204,6 +223,6 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
     removeLog,
     addCustomFood,
     getDailySummary,
-    categories: DEFAULT_CATEGORIES,
+    categories,
   }
 }

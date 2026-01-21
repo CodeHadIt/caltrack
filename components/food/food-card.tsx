@@ -10,23 +10,36 @@ import { DEFAULT_CATEGORIES } from '@/lib/constants'
 
 interface FoodCardProps {
   food: FoodItem
+  category?: Omit<FoodCategory, 'created_at'> | null
   onAdd?: () => void
   showAddButton?: boolean
 }
 
-export function FoodCard({ food, onAdd, showAddButton = true }: FoodCardProps) {
-  const category = DEFAULT_CATEGORIES.find(c => c.id === food.category_id)
+export function FoodCard({ food, category: propCategory, onAdd, showAddButton = true }: FoodCardProps) {
+  const category = propCategory || DEFAULT_CATEGORIES.find(c => c.id === food.category_id)
 
   return (
     <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          <div
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl"
-            style={{ backgroundColor: `${category?.color}20` }}
-          >
-            {category?.icon || '🍽️'}
-          </div>
+          {food.image_url ? (
+            <div className="relative h-12 w-12 shrink-0 rounded-xl overflow-hidden">
+              <Image
+                src={food.image_url}
+                alt={food.name}
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
+            </div>
+          ) : (
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl"
+              style={{ backgroundColor: `${category?.color}20` }}
+            >
+              {category?.icon || '🍽️'}
+            </div>
+          )}
 
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-sm truncate">{food.name}</h3>

@@ -146,19 +146,22 @@ function LogPageContent() {
                   </Link>
                 </div>
               ) : (
-                filteredFoods.map((food) => (
-                  <div
-                    key={food.id}
-                    onClick={() => handleSelectFood(food)}
-                    className={`cursor-pointer transition-all ${
-                      selectedFood?.id === food.id
-                        ? 'ring-2 ring-emerald-500 ring-offset-2 rounded-xl'
-                        : ''
-                    }`}
-                  >
-                    <FoodCard food={food} showAddButton={false} />
-                  </div>
-                ))
+                filteredFoods.map((food) => {
+                  const foodCategory = categories.find(c => c.id === food.category_id)
+                  return (
+                    <div
+                      key={food.id}
+                      onClick={() => handleSelectFood(food)}
+                      className={`cursor-pointer transition-all ${
+                        selectedFood?.id === food.id
+                          ? 'ring-2 ring-emerald-500 ring-offset-2 rounded-xl'
+                          : ''
+                      }`}
+                    >
+                      <FoodCard food={food} category={foodCategory} showAddButton={false} />
+                    </div>
+                  )
+                })
               )}
             </div>
           </div>

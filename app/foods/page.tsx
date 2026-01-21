@@ -95,11 +95,14 @@ export default function FoodsPage() {
           </div>
         ) : selectedCategory ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredFoods.map((food) => (
-              <Link key={food.id} href={`/log?food=${food.id}`}>
-                <FoodCard food={food} showAddButton={false} />
-              </Link>
-            ))}
+            {filteredFoods.map((food) => {
+              const foodCategory = categories.find(c => c.id === food.category_id)
+              return (
+                <Link key={food.id} href={`/log?food=${food.id}`}>
+                  <FoodCard food={food} category={foodCategory} showAddButton={false} />
+                </Link>
+              )
+            })}
           </div>
         ) : (
           <div className="space-y-8">
@@ -119,7 +122,7 @@ export default function FoodsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categoryFoods.map((food) => (
                       <Link key={food.id} href={`/log?food=${food.id}`}>
-                        <FoodCard food={food} showAddButton={false} />
+                        <FoodCard food={food} category={category} showAddButton={false} />
                       </Link>
                     ))}
                   </div>
