@@ -14,8 +14,8 @@ export const DEFAULT_FOODS: Omit<FoodItem, 'id' | 'created_at' | 'user_id'>[] = 
   // Carbs
   { category_id: 'cat-carbs', name: 'Basmati Rice', calories_per_100g: 150, protein_per_100g: 3.5, carbs_per_100g: 32, fat_per_100g: 0.4, image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop', is_default: true },
   { category_id: 'cat-carbs', name: 'Ripe Plantain', calories_per_100g: 122, protein_per_100g: 1.3, carbs_per_100g: 32, fat_per_100g: 0.4, image_url: 'https://images.unsplash.com/photo-1603052875302-d376b7c0638a?w=200&h=200&fit=crop', is_default: true },
-  { category_id: 'cat-carbs', name: 'Sweet Potato', calories_per_100g: 86, protein_per_100g: 1.6, carbs_per_100g: 20, fat_per_100g: 0.1, image_url: 'https://images.unsplash.com/photo-1619608246899-d972ae8d26b2?w=200&h=200&fit=crop', is_default: true },
-  { category_id: 'cat-carbs', name: 'Yam', calories_per_100g: 118, protein_per_100g: 1.5, carbs_per_100g: 28, fat_per_100g: 0.2, image_url: 'https://images.unsplash.com/photo-1594282486756-576bf05ed4b3?w=200&h=200&fit=crop', is_default: true },
+  { category_id: 'cat-carbs', name: 'Sweet Potato', calories_per_100g: 86, protein_per_100g: 1.6, carbs_per_100g: 20, fat_per_100g: 0.1, image_url: 'https://images.unsplash.com/photo-1546039907-7fa05f864c02?w=200&h=200&fit=crop', is_default: true },
+  { category_id: 'cat-carbs', name: 'Yam', calories_per_100g: 118, protein_per_100g: 1.5, carbs_per_100g: 28, fat_per_100g: 0.2, image_url: 'https://images.unsplash.com/photo-1516747773440-e1417d61e89a?w=200&h=200&fit=crop', is_default: true },
 
   // Proteins
   { category_id: 'cat-proteins', name: 'Chicken Breast', calories_per_100g: 165, protein_per_100g: 31, carbs_per_100g: 0, fat_per_100g: 3.6, image_url: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop', is_default: true },

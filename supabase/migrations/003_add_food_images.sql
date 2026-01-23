@@ -4,8 +4,8 @@
 -- Carbs
 UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop' WHERE name = 'Basmati Rice' AND is_default = true;
 UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1603052875302-d376b7c0638a?w=200&h=200&fit=crop' WHERE name = 'Ripe Plantain' AND is_default = true;
-UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1619608246899-d972ae8d26b2?w=200&h=200&fit=crop' WHERE name = 'Sweet Potato' AND is_default = true;
-UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1594282486756-576bf05ed4b3?w=200&h=200&fit=crop' WHERE name = 'Yam' AND is_default = true;
+UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1546039907-7fa05f864c02?w=200&h=200&fit=crop' WHERE name = 'Sweet Potato' AND is_default = true;
+UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1516747773440-e1417d61e89a?w=200&h=200&fit=crop' WHERE name = 'Yam' AND is_default = true;
 
 -- Proteins
 UPDATE food_items SET image_url = 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop' WHERE name = 'Chicken Breast' AND is_default = true;

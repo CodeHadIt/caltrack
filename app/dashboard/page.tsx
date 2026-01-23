@@ -10,14 +10,16 @@ import { DailySummary } from '@/components/log/daily-summary'
 import { MealSection } from '@/components/log/meal-section'
 import { CalorieChart } from '@/components/charts/calorie-chart'
 import { WeeklyTrend } from '@/components/charts/weekly-trend'
+import { ShareDialog } from '@/components/share/share-dialog'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
 import { getToday, formatDateShort } from '@/lib/utils'
-import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
+import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp, Share2 } from 'lucide-react'
 import { MealTime } from '@/types'
 
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(getToday())
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const { userId, isGuest, isLoading: authLoading } = useAuth()
   const { logs, fetchLogs, removeLog, getDailySummary, isLoading } = useFoodLog(
     userId,
@@ -74,12 +76,22 @@ export default function DashboardPage() {
             <h1 className="text-2xl md:text-3xl font-bold font-poppins">Dashboard</h1>
             <p className="text-muted-foreground">Track your daily nutrition</p>
           </div>
-          <Link href="/log">
-            <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
-              <Plus className="mr-2 h-4 w-4" />
-              Log Food
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShareDialogOpen(true)}
+              className="border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+            >
+              <Share2 className="mr-2 h-4 w-4" />
+              Share
             </Button>
-          </Link>
+            <Link href="/log">
+              <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
+                <Plus className="mr-2 h-4 w-4" />
+                Log Food
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Date Navigation */}
@@ -176,6 +188,14 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Share Dialog */}
+        <ShareDialog
+          open={shareDialogOpen}
+          onOpenChange={setShareDialogOpen}
+          summary={summary}
+          calorieGoal={2000}
+        />
       </main>
     </AppWrapper>
   )
