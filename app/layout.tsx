@@ -17,6 +17,13 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "CalTrack - Calorie Tracker",
   description: "Track your calories, macros, and reach your fitness goals with CalTrack",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({

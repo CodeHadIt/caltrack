@@ -1,8 +1,9 @@
 'use client'
 
 import { forwardRef } from 'react'
+import Image from 'next/image'
 import { DailySummary } from '@/types'
-import { Flame, Beef, Wheat, Droplets } from 'lucide-react'
+import { Beef, Wheat, Droplets } from 'lucide-react'
 
 interface ShareCardProps {
   summary: DailySummary
@@ -30,9 +31,14 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
       >
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-1.5 mb-3">
-            <Flame className="h-4 w-4 text-white" />
-            <span className="text-white text-sm font-medium">CalTrack</span>
+          <div className="inline-flex items-center justify-center mb-3">
+            <Image
+              src="/caltrack_logo.png"
+              alt="CalTrack"
+              width={50}
+              height={50}
+              className="object-contain"
+            />
           </div>
           <h2 className="text-white text-lg font-medium opacity-90">{dateFormatted}</h2>
           {userName && (
@@ -114,8 +120,14 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
         </div>
 
         {/* Footer */}
-        <div className="text-center">
-          <p className="text-white/50 text-xs">Track your nutrition with CalTrack</p>
+        <div className="flex justify-center">
+          <Image
+            src="/caltrack_logo.png"
+            alt="CalTrack"
+            width={32}
+            height={32}
+            className="object-contain opacity-60"
+          />
         </div>
       </div>
     )

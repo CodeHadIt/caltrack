@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Email - CalTrack</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header h1 {
+      color: white;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #1f2937;
+    }
+    .content h2 {
+      color: #059669;
+      font-size: 24px;
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+    .content p {
+      line-height: 1.6;
+      margin: 0 0 20px;
+      color: #4b5563;
+      font-size: 16px;
+    }
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+    .button:hover {
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+    }
+    .footer {
+      padding: 30px;
+      text-align: center;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer p {
+      margin: 5px 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+      margin: 30px 0;
+    }
+    .info-box {
+      background: #f0fdf4;
+      border-left: 4px solid #059669;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .info-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #065f46;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <span style="font-size: 40px;">🍽️</span>
+      </div>
+      <h1>CalTrack</h1>
+    </div>
+
+    <div class="content">
+      <h2>Welcome to CalTrack!</h2>
+
+      <p>Hi there,</p>
+
+      <p>Thanks for signing up! We're excited to help you track your nutrition and reach your fitness goals.</p>
+
+      <p>To get started, please confirm your email address by clicking the button below:</p>
+
+      <div style="text-align: center;">
+        <a href="{{ .ConfirmationURL }}" class="button">Confirm Your Email</a>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Link not working?</strong> Copy and paste this URL into your browser:</p>
+        <p style="word-break: break-all; margin-top: 8px;">{{ .ConfirmationURL }}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="font-size: 14px; color: #6b7280;">
+        This link will expire in 24 hours. If you didn't create an account with CalTrack, you can safely ignore this email.
+      </p>
+    </div>
+
+    <div class="footer">
+      <p><strong>CalTrack</strong></p>
+      <p>Track your nutrition, reach your goals</p>
+      <p style="margin-top: 15px; font-size: 12px;">
+        © 2026 CalTrack. All rights reserved.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

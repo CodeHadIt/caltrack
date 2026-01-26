@@ -68,6 +68,18 @@ export function useAuth() {
             isGuest: false,
             isLoading: false,
           })
+
+          // Send welcome email after successful email confirmation
+          if (event === 'SIGNED_IN' && session.user.email_confirmed_at) {
+            try {
+              await fetch('/api/auth/welcome', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+              })
+            } catch (error) {
+              console.error('Failed to send welcome email:', error)
+            }
+          }
         } else {
           const guestProfile = getGuestProfile()
           setState({

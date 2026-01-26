@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to CalTrack!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+      padding: 50px 30px;
+      text-align: center;
+    }
+    .celebration {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      color: white;
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+    }
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 10px 0 0;
+      font-size: 18px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #1f2937;
+    }
+    .content h2 {
+      color: #059669;
+      font-size: 24px;
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+    .content p {
+      line-height: 1.6;
+      margin: 0 0 20px;
+      color: #4b5563;
+      font-size: 16px;
+    }
+    .feature-grid {
+      display: table;
+      width: 100%;
+      margin: 30px 0;
+    }
+    .feature {
+      display: table;
+      width: 100%;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+      border-radius: 12px;
+      border-left: 4px solid #059669;
+    }
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .feature h3 {
+      color: #065f46;
+      font-size: 18px;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+    .feature p {
+      margin: 0;
+      font-size: 14px;
+      color: #047857;
+    }
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+    .cta-section {
+      text-align: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+      border-radius: 12px;
+      margin: 30px 0;
+    }
+    .footer {
+      padding: 30px;
+      text-align: center;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer p {
+      margin: 5px 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+      margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="celebration">🎉</div>
+      <h1>You're All Set!</h1>
+      <p>Welcome to the CalTrack community</p>
+    </div>
+
+    <div class="content">
+      <h2>Hey there, nutrition champion!</h2>
+
+      <p>Your email is confirmed and your account is ready to roll. We're thrilled to have you on board! 🚀</p>
+
+      <p>CalTrack is here to make nutrition tracking simple, visual, and actually enjoyable. No more guessing, no more complicated spreadsheets—just clean data and clear insights.</p>
+
+      <div class="divider"></div>
+
+      <h2 style="text-align: center; margin-bottom: 30px;">Here's what you can do right now:</h2>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="feature-icon">🍎</div>
+          <h3>Track Your Meals</h3>
+          <p>Log breakfast, lunch, dinner, and snacks with our extensive food database. Add custom foods too!</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">📊</div>
+          <h3>See Your Progress</h3>
+          <p>Beautiful charts show your daily and weekly calorie trends at a glance.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Calculate Your Goals</h3>
+          <p>Use our TDEE and body fat calculators to set personalized targets.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">📱</div>
+          <h3>Share Your Wins</h3>
+          <p>Create beautiful summaries of your daily nutrition to share with friends or save for motivation.</p>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h3 style="color: #059669; margin: 0 0 15px;">Ready to start tracking?</h3>
+        <p style="margin-bottom: 20px; color: #4b5563;">Jump into your dashboard and log your first meal!</p>
+        <a href="{{ .SiteURL }}/dashboard" class="button">Go to Dashboard →</a>
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="font-size: 14px; color: #6b7280; text-align: center;">
+        <strong>Pro tip:</strong> Start by exploring our pre-loaded foods or add your own custom items. The more you log, the better insights you'll get!
+      </p>
+    </div>
+
+    <div class="footer">
+      <p><strong>CalTrack</strong></p>
+      <p>Track your nutrition, reach your goals</p>
+      <p style="margin-top: 15px; font-size: 12px;">
+        Need help? Just reply to this email—we're here for you!
+      </p>
+      <p style="font-size: 12px;">
+        © 2026 CalTrack. All rights reserved.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

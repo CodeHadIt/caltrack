@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, User, LogOut, Calculator, UtensilsCrossed, LayoutDashboard, Apple } from 'lucide-react'
+import { Menu, User, LogOut, Calculator, LayoutDashboard, Apple, UtensilsCrossed } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
@@ -35,13 +36,14 @@ export function Navbar({ isGuest, userEmail, onSignOut }: NavbarProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg">
-              <UtensilsCrossed className="h-5 w-5" />
-            </div>
-            <span className="hidden font-poppins text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent sm:inline-block">
-              CalTrack
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/caltrack_logo.png"
+              alt="CalTrack"
+              width={180}
+              height={40}
+              className="object-contain"
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">

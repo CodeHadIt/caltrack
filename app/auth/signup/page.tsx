@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { AppWrapper } from '@/components/app-wrapper'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { toast } from 'sonner'
-import { Loader2, Mail, Lock, UtensilsCrossed, Sparkles } from 'lucide-react'
+import { Loader2, Mail, Lock, Sparkles } from 'lucide-react'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -55,13 +56,14 @@ export default function SignupPage() {
     <AppWrapper showNav={false}>
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg">
-              <UtensilsCrossed className="h-5 w-5" />
-            </div>
-            <span className="font-poppins text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              CalTrack
-            </span>
+          <Link href="/" className="flex items-center justify-center mb-8">
+            <Image
+              src="/caltrack_logo.png"
+              alt="CalTrack"
+              width={80}
+              height={80}
+              className="object-contain"
+            />
           </Link>
 
           <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur">
