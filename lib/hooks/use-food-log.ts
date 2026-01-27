@@ -24,45 +24,61 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
   const fetchFoods = useCallback(async () => {
     setIsLoading(true)
 
-    if (isGuest) {
-      const customFoods = getGuestCustomFoods()
-      const defaultFoods = DEFAULT_FOODS.map((food, index) => ({
-        ...food,
-        id: `default-${index}`,
-        user_id: null,
-        created_at: new Date().toISOString(),
-      }))
-      setFoods([...defaultFoods, ...customFoods])
-      setCategories(DEFAULT_CATEGORIES)
+    try {
+      if (isGuest) {
+        const customFoods = getGuestCustomFoods()
+        const defaultFoods = DEFAULT_FOODS.map((food, index) => ({
+          ...food,
+          id: `default-${index}`,
+          user_id: null,
+          created_at: new Date().toISOString(),
+        }))
+        setFoods([...defaultFoods, ...customFoods])
+        setCategories(DEFAULT_CATEGORIES)
+        setIsLoading(false)
+        return [...defaultFoods, ...customFoods]
+      }
+
+      // Fetch categories from database
+      const { data: dbCategories, error: catError } = await supabase
+        .from('food_categories')
+        .select('*')
+        .order('name')
+
+      if (catError) {
+        console.error('Error fetching categories:', catError)
+        setCategories(DEFAULT_CATEGORIES)
+      } else if (dbCategories) {
+        setCategories(dbCategories)
+      }
+
+      // Fetch foods from database
+      const { data: dbFoods, error: foodError } = await supabase
+        .from('food_items')
+        .select('*')
+        .or(`is_default.eq.true,user_id.eq.${userId}`)
+        .order('name')
+
+      if (foodError) {
+        console.error('Error fetching foods:', foodError)
+        setFoods([])
+        setIsLoading(false)
+        return []
+      }
+
+      if (dbFoods) {
+        setFoods(dbFoods)
+        setIsLoading(false)
+        return dbFoods
+      }
+
       setIsLoading(false)
-      return [...defaultFoods, ...customFoods]
-    }
-
-    // Fetch categories from database
-    const { data: dbCategories } = await supabase
-      .from('food_categories')
-      .select('*')
-      .order('name')
-
-    if (dbCategories) {
-      setCategories(dbCategories)
-    }
-
-    // Fetch foods from database
-    const { data: dbFoods } = await supabase
-      .from('food_items')
-      .select('*')
-      .or(`is_default.eq.true,user_id.eq.${userId}`)
-      .order('name')
-
-    if (dbFoods) {
-      setFoods(dbFoods)
+      return []
+    } catch (error) {
+      console.error('Error in fetchFoods:', error)
       setIsLoading(false)
-      return dbFoods
+      return []
     }
-
-    setIsLoading(false)
-    return []
   }, [isGuest, userId, supabase])
 
   const fetchLogs = useCallback(async (date: string) => {
