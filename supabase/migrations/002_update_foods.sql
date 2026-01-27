@@ -24,7 +24,8 @@ INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, 
   ('00000000-0000-0000-0000-000000000001', 'Basmati Rice', 150, 3.5, 32, 0.4, true),
   ('00000000-0000-0000-0000-000000000001', 'Ripe Plantain', 122, 1.3, 32, 0.4, true),
   ('00000000-0000-0000-0000-000000000001', 'Sweet Potato', 86, 1.6, 20, 0.1, true),
-  ('00000000-0000-0000-0000-000000000001', 'Yam', 118, 1.5, 28, 0.2, true);
+  ('00000000-0000-0000-0000-000000000001', 'Yam', 118, 1.5, 28, 0.2, true),
+  ('00000000-0000-0000-0000-000000000001', 'Irish Potatoes', 77, 2, 17, 0.1, true);
 
 -- Proteins
 INSERT INTO food_items (category_id, name, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, is_default) VALUES
