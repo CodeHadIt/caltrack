@@ -46,7 +46,7 @@ export default function LoginPage() {
             <Image
               src="/caltrack_logo.png"
               alt="CalTrack"
-              width={80}
+              width={180}
               height={80}
               className="object-contain"
             />
