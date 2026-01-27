@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Account Deletion - CalTrack</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .logo {
+      max-width: 180px;
+      height: auto;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    .header h1 {
+      color: white;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #1f2937;
+    }
+    .content h2 {
+      color: #dc2626;
+      font-size: 24px;
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+    .content p {
+      line-height: 1.6;
+      margin: 0 0 20px;
+      color: #4b5563;
+      font-size: 16px;
+    }
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+    .button:hover {
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+    }
+    .footer {
+      padding: 30px;
+      text-align: center;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer p {
+      margin: 5px 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+      margin: 30px 0;
+    }
+    .warning-box {
+      background: #fef2f2;
+      border-left: 4px solid #dc2626;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .warning-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #7f1d1d;
+    }
+    .info-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .info-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #1e3a8a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{ .SiteURL }}/caltrack_logo.png" alt="CalTrack" class="logo" width="180" />
+      <h1>Account Deletion Request</h1>
+    </div>
+
+    <div class="content">
+      <h2>Confirm Account Deletion</h2>
+
+      <p>Hi there,</p>
+
+      <p>We received a request to permanently delete your CalTrack account associated with <strong>{{ .Email }}</strong>.</p>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Warning: This action is permanent and cannot be undone!</strong></p>
+      </div>
+
+      <p>If you confirm this deletion, the following data will be permanently removed:</p>
+
+      <ul style="color: #4b5563; line-height: 1.8; margin: 20px 0;">
+        <li>Your account and login credentials</li>
+        <li>All food logs and meal history</li>
+        <li>Custom food items you've created</li>
+        <li>Profile information and settings</li>
+        <li>All associated data</li>
+      </ul>
+
+      <p>To confirm the deletion of your account, click the button below:</p>
+
+      <div style="text-align: center;">
+        <a href="{{ .ConfirmationURL }}" class="button">Confirm Account Deletion</a>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Link not working?</strong> Copy and paste this URL into your browser:</p>
+        <p style="word-break: break-all; margin-top: 8px;">{{ .ConfirmationURL }}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="font-size: 14px; color: #6b7280;">
+        <strong>Didn't request this?</strong> If you didn't request to delete your account, you can safely ignore this email. Your account will remain active and secure.
+      </p>
+
+      <p style="font-size: 14px; color: #6b7280;">
+        This link will expire in 24 hours. After that, you'll need to request account deletion again.
+      </p>
+    </div>
+
+    <div class="footer">
+      <p><strong>CalTrack</strong></p>
+      <p>Track your nutrition, reach your goals</p>
+      <p style="margin-top: 15px; font-size: 12px;">
+        © 2026 CalTrack. All rights reserved.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

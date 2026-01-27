@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,10 +14,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { AppWrapper } from '@/components/app-wrapper'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { toast } from 'sonner'
-import { User, Save, Loader2, Shield } from 'lucide-react'
+import { User, Save, Loader2, Shield, Trash2 } from 'lucide-react'
 import { ActivityLevel, Gender, Goal, ACTIVITY_LABELS } from '@/types'
 import Link from 'next/link'
 
@@ -28,6 +40,7 @@ const GOAL_LABELS: Record<Goal, string> = {
 
 export default function ProfilePage() {
   const { profile, updateProfile, isGuest, user, isLoading: authLoading } = useAuth()
+  const router = useRouter()
 
   const [height, setHeight] = useState('')
   const [weight, setWeight] = useState('')
@@ -36,24 +49,92 @@ export default function ProfilePage() {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate')
   const [goal, setGoal] = useState<Goal>('maintain')
   const [isSaving, setIsSaving] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  // Unit preferences
+  const [heightUnit, setHeightUnit] = useState<'cm' | 'ft'>('cm')
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg')
+
+  // Conversion utilities
+  const cmToFeet = (cm: number) => {
+    const totalInches = cm / 2.54
+    const feet = Math.floor(totalInches / 12)
+    const inches = Math.round(totalInches % 12)
+    return `${feet}'${inches}"`
+  }
+
+  const feetToCm = (feet: number, inches: number) => {
+    return Math.round((feet * 12 + inches) * 2.54)
+  }
+
+  const kgToLbs = (kg: number) => {
+    return Math.round(kg * 2.20462 * 10) / 10
+  }
+
+  const lbsToKg = (lbs: number) => {
+    return Math.round((lbs / 2.20462) * 10) / 10
+  }
 
   useEffect(() => {
     if (profile) {
-      setHeight(profile.height_cm?.toString() || '')
-      setWeight(profile.weight_kg?.toString() || '')
+      // Set height based on unit
+      if (profile.height_cm) {
+        if (heightUnit === 'cm') {
+          setHeight(profile.height_cm.toString())
+        } else {
+          const totalInches = profile.height_cm / 2.54
+          const feet = Math.floor(totalInches / 12)
+          const inches = Math.round(totalInches % 12)
+          setHeight(`${feet}.${inches}`)
+        }
+      }
+
+      // Set weight based on unit
+      if (profile.weight_kg) {
+        if (weightUnit === 'kg') {
+          setWeight(profile.weight_kg.toString())
+        } else {
+          setWeight(kgToLbs(profile.weight_kg).toString())
+        }
+      }
+
       setAge(profile.age?.toString() || '')
       setGender((profile.gender as Gender) || 'male')
       setActivityLevel((profile.activity_level as ActivityLevel) || 'moderate')
       setGoal((profile.goal as Goal) || 'maintain')
     }
-  }, [profile])
+  }, [profile, heightUnit, weightUnit])
 
   const handleSave = async () => {
     setIsSaving(true)
 
+    // Convert height to cm
+    let heightCm: number | null = null
+    if (height) {
+      if (heightUnit === 'cm') {
+        heightCm = parseFloat(height)
+      } else {
+        // Parse feet and inches from format like "5.11" or "5'11""
+        const parts = height.replace(/['"]/g, '').split(/[.\s]/)
+        const feet = parseInt(parts[0]) || 0
+        const inches = parseInt(parts[1]) || 0
+        heightCm = feetToCm(feet, inches)
+      }
+    }
+
+    // Convert weight to kg
+    let weightKg: number | null = null
+    if (weight) {
+      if (weightUnit === 'kg') {
+        weightKg = parseFloat(weight)
+      } else {
+        weightKg = lbsToKg(parseFloat(weight))
+      }
+    }
+
     const { error } = await updateProfile({
-      height_cm: height ? parseFloat(height) : null,
-      weight_kg: weight ? parseFloat(weight) : null,
+      height_cm: heightCm,
+      weight_kg: weightKg,
       age: age ? parseInt(age) : null,
       gender,
       activity_level: activityLevel,
@@ -68,6 +149,40 @@ export default function ProfilePage() {
 
     toast.success('Profile saved!')
     setIsSaving(false)
+
+    // Redirect to dashboard after saving
+    router.push('/dashboard')
+  }
+
+  const handleDeleteAccount = async () => {
+    if (isGuest) {
+      toast.error('Guest accounts cannot be deleted')
+      return
+    }
+
+    setIsDeleting(true)
+
+    try {
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to request account deletion')
+      }
+
+      toast.success('Verification email sent!', {
+        description: 'Please check your email to confirm account deletion.',
+      })
+    } catch (error) {
+      console.error('Error requesting account deletion:', error)
+      toast.error('Failed to send deletion email')
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   return (
@@ -127,22 +242,44 @@ export default function ProfilePage() {
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="height">Height (cm)</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="height">Height</Label>
+                  <Select value={heightUnit} onValueChange={(value: 'cm' | 'ft') => setHeightUnit(value)}>
+                    <SelectTrigger className="w-20 h-7 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="cm">cm</SelectItem>
+                      <SelectItem value="ft">ft</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Input
                   id="height"
-                  type="number"
-                  placeholder="e.g., 175"
+                  type="text"
+                  placeholder={heightUnit === 'cm' ? 'e.g., 175' : "e.g., 5'11\""}
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="weight">Weight</Label>
+                  <Select value={weightUnit} onValueChange={(value: 'kg' | 'lbs') => setWeightUnit(value)}>
+                    <SelectTrigger className="w-20 h-7 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="kg">kg</SelectItem>
+                      <SelectItem value="lbs">lbs</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Input
                   id="weight"
                   type="number"
                   step="0.1"
-                  placeholder="e.g., 70"
+                  placeholder={weightUnit === 'kg' ? 'e.g., 70' : 'e.g., 154'}
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                 />
@@ -235,6 +372,66 @@ export default function ProfilePage() {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Danger Zone - Delete Account */}
+        {!isGuest && (
+          <Card className="mt-6 border-red-200 dark:border-red-900 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-lg font-poppins text-red-600 dark:text-red-400">
+                Danger Zone
+              </CardTitle>
+              <CardDescription>
+                Permanently delete your account and all associated data
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    disabled={isDeleting}
+                    className="w-full sm:w-auto"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Account
+                      </>
+                    )}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. We will send a confirmation email to{' '}
+                      <strong>{user?.email}</strong>. You must confirm the deletion via email
+                      before your account is permanently deleted.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      Send Confirmation Email
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <p className="text-xs text-muted-foreground mt-3">
+                All your data including food logs, custom foods, and profile information will be
+                permanently deleted.
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </main>
     </AppWrapper>
   )
