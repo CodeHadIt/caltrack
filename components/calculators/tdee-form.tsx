@@ -40,10 +40,10 @@ export function TDEEForm() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 shadow-lg">
+      <Card className="border-0 card-glow bg-card/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-poppins">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+          <CardTitle className="flex items-center gap-3 font-display">
+            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-coral to-rose flex items-center justify-center shadow-lg shadow-coral/25">
               <Calculator className="h-5 w-5 text-white" />
             </div>
             TDEE Calculator
@@ -55,42 +55,42 @@ export function TDEEForm() {
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="weight">Weight (kg)</Label>
+              <Label htmlFor="weight" className="font-medium">Weight (kg)</Label>
               <Input
                 id="weight"
                 type="number"
                 placeholder="e.g., 70"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="height">Height (cm)</Label>
+              <Label htmlFor="height" className="font-medium">Height (cm)</Label>
               <Input
                 id="height"
                 type="number"
                 placeholder="e.g., 175"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="age">Age (years)</Label>
+              <Label htmlFor="age" className="font-medium">Age (years)</Label>
               <Input
                 id="age"
                 type="number"
                 placeholder="e.g., 30"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
               />
             </div>
           </div>
 
           <div className="space-y-3">
-            <Label>Gender</Label>
+            <Label className="font-medium">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as Gender)}
@@ -108,17 +108,17 @@ export function TDEEForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Activity Level</Label>
+            <Label className="font-medium">Activity Level</Label>
             <Select
               value={activityLevel}
               onValueChange={(value) => setActivityLevel(value as ActivityLevel)}
             >
-              <SelectTrigger className="border-slate-200 dark:border-slate-700">
+              <SelectTrigger className="h-11 rounded-xl border-coral/20">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 {(Object.keys(ACTIVITY_LABELS) as ActivityLevel[]).map((level) => (
-                  <SelectItem key={level} value={level}>
+                  <SelectItem key={level} value={level} className="rounded-lg">
                     {ACTIVITY_LABELS[level]}
                   </SelectItem>
                 ))}
@@ -129,7 +129,7 @@ export function TDEEForm() {
           <Button
             onClick={handleCalculate}
             disabled={!weight || !height || !age}
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+            className="w-full btn-gradient text-white h-12 rounded-xl font-semibold shadow-lg shadow-coral/25"
           >
             <Calculator className="mr-2 h-4 w-4" />
             Calculate TDEE
@@ -138,45 +138,45 @@ export function TDEEForm() {
       </Card>
 
       {result && (
-        <Card className="border-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10 shadow-lg">
+        <Card className="border-0 bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10 card-glow">
           <CardHeader>
-            <CardTitle className="text-lg font-poppins">Your Results</CardTitle>
+            <CardTitle className="text-lg font-display">Your Results</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl bg-white/60 dark:bg-slate-800/60 text-center">
-                <div className="flex items-center justify-center gap-2 text-emerald-600 mb-2">
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="flex items-center justify-center gap-2 text-sage mb-2">
                   <Activity className="h-4 w-4" />
-                  <span className="text-xs font-medium">BMR</span>
+                  <span className="text-xs font-semibold">BMR</span>
                 </div>
-                <p className="text-2xl font-bold font-poppins">{result.bmr}</p>
+                <p className="text-2xl font-bold font-display">{result.bmr}</p>
                 <p className="text-xs text-muted-foreground">kcal/day</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white text-center">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-coral to-rose text-white text-center shadow-lg shadow-coral/25 hover-lift">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Flame className="h-4 w-4" />
-                  <span className="text-xs font-medium">TDEE</span>
+                  <span className="text-xs font-semibold">TDEE</span>
                 </div>
-                <p className="text-2xl font-bold font-poppins">{result.tdee}</p>
+                <p className="text-2xl font-bold font-display">{result.tdee}</p>
                 <p className="text-xs opacity-80">kcal/day</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-white/60 dark:bg-slate-800/60 text-center">
-                <div className="flex items-center justify-center gap-2 text-blue-600 mb-2">
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="flex items-center justify-center gap-2 text-sky mb-2">
                   <TrendingDown className="h-4 w-4" />
-                  <span className="text-xs font-medium">Weight Loss</span>
+                  <span className="text-xs font-semibold">Weight Loss</span>
                 </div>
-                <p className="text-2xl font-bold font-poppins">{result.deficit}</p>
+                <p className="text-2xl font-bold font-display">{result.deficit}</p>
                 <p className="text-xs text-muted-foreground">kcal/day</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-white/60 dark:bg-slate-800/60 text-center">
-                <div className="flex items-center justify-center gap-2 text-orange-600 mb-2">
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="flex items-center justify-center gap-2 text-honey mb-2">
                   <TrendingUp className="h-4 w-4" />
-                  <span className="text-xs font-medium">Weight Gain</span>
+                  <span className="text-xs font-semibold">Weight Gain</span>
                 </div>
-                <p className="text-2xl font-bold font-poppins">{result.surplus}</p>
+                <p className="text-2xl font-bold font-display">{result.surplus}</p>
                 <p className="text-xs text-muted-foreground">kcal/day</p>
               </div>
             </div>

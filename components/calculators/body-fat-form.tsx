@@ -47,15 +47,15 @@ export function BodyFatForm() {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'Essential Fat':
-        return 'text-blue-600'
+        return 'text-sky'
       case 'Athletes':
-        return 'text-emerald-600'
+        return 'text-sage'
       case 'Fitness':
-        return 'text-teal-600'
+        return 'text-coral'
       case 'Average':
-        return 'text-amber-600'
+        return 'text-honey'
       case 'Obese':
-        return 'text-red-600'
+        return 'text-destructive'
       default:
         return 'text-muted-foreground'
     }
@@ -63,10 +63,10 @@ export function BodyFatForm() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 shadow-lg">
+      <Card className="border-0 card-glow bg-card/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-poppins">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+          <CardTitle className="flex items-center gap-3 font-display">
+            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-sky to-blue-400 flex items-center justify-center shadow-lg shadow-sky/25">
               <Percent className="h-5 w-5 text-white" />
             </div>
             Body Fat Calculator
@@ -77,7 +77,7 @@ export function BodyFatForm() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-3">
-            <Label>Gender</Label>
+            <Label className="font-medium">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => {
@@ -99,18 +99,18 @@ export function BodyFatForm() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="bf-height">Height (cm)</Label>
+              <Label htmlFor="bf-height" className="font-medium">Height (cm)</Label>
               <Input
                 id="bf-height"
                 type="number"
                 placeholder="e.g., 175"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-sky/20 focus:border-sky/40 focus:ring-sky/20"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bf-neck">Neck circumference (cm)</Label>
+              <Label htmlFor="bf-neck" className="font-medium">Neck circumference (cm)</Label>
               <Input
                 id="bf-neck"
                 type="number"
@@ -118,11 +118,11 @@ export function BodyFatForm() {
                 placeholder="e.g., 38"
                 value={neck}
                 onChange={(e) => setNeck(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-sky/20 focus:border-sky/40 focus:ring-sky/20"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bf-waist">Waist circumference (cm)</Label>
+              <Label htmlFor="bf-waist" className="font-medium">Waist circumference (cm)</Label>
               <Input
                 id="bf-waist"
                 type="number"
@@ -130,7 +130,7 @@ export function BodyFatForm() {
                 placeholder="e.g., 85"
                 value={waist}
                 onChange={(e) => setWaist(e.target.value)}
-                className="border-slate-200 dark:border-slate-700"
+                className="h-11 rounded-xl border-sky/20 focus:border-sky/40 focus:ring-sky/20"
               />
               <p className="text-xs text-muted-foreground">
                 Measure at navel level
@@ -138,7 +138,7 @@ export function BodyFatForm() {
             </div>
             {gender === 'female' && (
               <div className="space-y-2">
-                <Label htmlFor="bf-hip">Hip circumference (cm)</Label>
+                <Label htmlFor="bf-hip" className="font-medium">Hip circumference (cm)</Label>
                 <Input
                   id="bf-hip"
                   type="number"
@@ -146,7 +146,7 @@ export function BodyFatForm() {
                   placeholder="e.g., 100"
                   value={hip}
                   onChange={(e) => setHip(e.target.value)}
-                  className="border-slate-200 dark:border-slate-700"
+                  className="h-11 rounded-xl border-sky/20 focus:border-sky/40 focus:ring-sky/20"
                 />
                 <p className="text-xs text-muted-foreground">
                   Measure at widest point
@@ -156,12 +156,12 @@ export function BodyFatForm() {
           </div>
 
           {error && (
-            <p className="text-sm text-red-500">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           )}
 
           <Button
             onClick={handleCalculate}
-            className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white"
+            className="w-full bg-gradient-to-r from-sky to-blue-400 hover:from-sky hover:to-blue-500 text-white h-12 rounded-xl font-semibold shadow-lg shadow-sky/25"
           >
             <Ruler className="mr-2 h-4 w-4" />
             Calculate Body Fat
@@ -170,19 +170,19 @@ export function BodyFatForm() {
       </Card>
 
       {result && (
-        <Card className="border-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-indigo-500/10 shadow-lg">
+        <Card className="border-0 bg-gradient-to-br from-sky/10 via-blue-400/10 to-indigo-400/10 card-glow">
           <CardHeader>
-            <CardTitle className="text-lg font-poppins">Your Results</CardTitle>
+            <CardTitle className="text-lg font-display">Your Results</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-6">
               <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
-                  <div className="w-28 h-28 rounded-full bg-white dark:bg-slate-900 flex flex-col items-center justify-center">
-                    <span className="text-3xl font-bold font-poppins">
+                <div className="w-36 h-36 rounded-full bg-gradient-to-br from-sky to-blue-400 flex items-center justify-center shadow-lg shadow-sky/25">
+                  <div className="w-32 h-32 rounded-full bg-card flex flex-col items-center justify-center">
+                    <span className="text-4xl font-bold font-display">
                       {result.percentage}%
                     </span>
-                    <span className="text-xs text-muted-foreground">Body Fat</span>
+                    <span className="text-xs text-muted-foreground font-medium">Body Fat</span>
                   </div>
                 </div>
               </div>
@@ -191,35 +191,35 @@ export function BodyFatForm() {
               </p>
             </div>
 
-            <div className="mt-4 p-4 rounded-xl bg-white/60 dark:bg-slate-800/60">
-              <h4 className="font-semibold mb-3">Body Fat Categories ({gender === 'male' ? 'Men' : 'Women'})</h4>
+            <div className="mt-4 p-5 rounded-2xl bg-card/60 backdrop-blur-sm">
+              <h4 className="font-semibold font-display mb-3">Body Fat Categories ({gender === 'male' ? 'Men' : 'Women'})</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-blue-600">Essential Fat</span>
+                  <span className="text-sky font-medium">Essential Fat</span>
                   <span className="text-muted-foreground">
                     {gender === 'male' ? '2-6%' : '10-14%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-emerald-600">Athletes</span>
+                  <span className="text-sage font-medium">Athletes</span>
                   <span className="text-muted-foreground">
                     {gender === 'male' ? '6-14%' : '14-21%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-teal-600">Fitness</span>
+                  <span className="text-coral font-medium">Fitness</span>
                   <span className="text-muted-foreground">
                     {gender === 'male' ? '14-18%' : '21-25%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-amber-600">Average</span>
+                  <span className="text-honey font-medium">Average</span>
                   <span className="text-muted-foreground">
                     {gender === 'male' ? '18-25%' : '25-32%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-red-600">Obese</span>
+                  <span className="text-destructive font-medium">Obese</span>
                   <span className="text-muted-foreground">
                     {gender === 'male' ? '>25%' : '>32%'}
                   </span>
