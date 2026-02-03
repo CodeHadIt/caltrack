@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { AppWrapper } from '@/components/app-wrapper'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { toast } from 'sonner'
-import { Loader2, Mail, Lock } from 'lucide-react'
+import { Loader2, Mail, Lock, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -42,52 +42,58 @@ export default function LoginPage() {
     <AppWrapper showNav={false}>
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Link href="/" className="flex items-center justify-center mb-8">
+          <Link href="/" className="flex items-center justify-center mb-10 group">
             <Image
               src="/caltrack_logo.png"
               alt="CalTrack"
-              width={180}
-              height={80}
-              className="object-contain"
+              width={200}
+              height={90}
+              className="object-contain transition-transform group-hover:scale-[1.02]"
             />
           </Link>
 
-          <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-poppins">Welcome Back</CardTitle>
-              <CardDescription>
+          <Card className="border-0 card-glow bg-card/90 backdrop-blur-xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-40 h-40 -mr-16 -mt-16 rounded-full bg-coral/10 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 -ml-10 -mb-10 rounded-full bg-peach/10 blur-3xl" />
+            <CardHeader className="text-center relative pt-8">
+              <CardTitle className="text-3xl font-display font-bold">Welcome Back</CardTitle>
+              <CardDescription className="text-base mt-2">
                 Sign in to your account to continue
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <CardContent className="relative pb-8">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="font-medium">Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-coral/10 flex items-center justify-center">
+                      <Mail className="h-4 w-4 text-coral" />
+                    </div>
                     <Input
                       id="email"
                       type="email"
                       placeholder="you@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
+                      className="pl-14 h-12 rounded-xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="font-medium">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-coral/10 flex items-center justify-center">
+                      <Lock className="h-4 w-4 text-coral" />
+                    </div>
                     <Input
                       id="password"
                       type="password"
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10"
+                      className="pl-14 h-12 rounded-xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
                       required
                     />
                   </div>
@@ -96,7 +102,7 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                  className="w-full btn-gradient text-white h-12 rounded-xl font-semibold shadow-lg shadow-coral/25 mt-2"
                 >
                   {isLoading ? (
                     <>
@@ -104,16 +110,19 @@ export default function LoginPage() {
                       Signing in...
                     </>
                   ) : (
-                    'Sign in'
+                    <>
+                      Sign in
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
                   )}
                 </Button>
               </form>
 
-              <div className="mt-6 text-center text-sm">
+              <div className="mt-8 text-center text-sm">
                 <span className="text-muted-foreground">Don&apos;t have an account? </span>
                 <Link
                   href="/auth/signup"
-                  className="text-emerald-600 hover:text-emerald-700 font-medium"
+                  className="text-coral hover:text-coral font-semibold hover:underline underline-offset-4"
                 >
                   Sign up
                 </Link>
@@ -122,9 +131,9 @@ export default function LoginPage() {
               <div className="mt-4 text-center">
                 <Link
                   href="/dashboard"
-                  className="text-sm text-muted-foreground hover:text-foreground"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
                 >
-                  Continue as guest
+                  Continue as guest →
                 </Link>
               </div>
             </CardContent>

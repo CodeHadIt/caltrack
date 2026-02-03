@@ -90,35 +90,39 @@ function LogPageContent() {
 
   return (
     <AppWrapper>
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-8">
         <Link href="/dashboard">
-          <Button variant="ghost" className="mb-4">
+          <Button variant="ghost" className="mb-6 rounded-xl hover:bg-coral/10">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
         </Link>
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold font-poppins flex items-center gap-2">
-              <UtensilsCrossed className="h-7 w-7 text-emerald-600" />
+            <h1 className="text-3xl md:text-4xl font-bold font-display flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-coral/10 flex items-center justify-center">
+                <UtensilsCrossed className="h-6 w-6 text-coral" />
+              </div>
               Log Food
             </h1>
-            <p className="text-muted-foreground">Select a food and set the amount</p>
+            <p className="text-muted-foreground mt-2">Select a food and set the amount</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Food Selection */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-5">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-coral/10 flex items-center justify-center">
+                <Search className="h-4 w-4 text-coral" />
+              </div>
               <Input
                 placeholder="Search foods..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 text-lg"
+                className="pl-14 h-14 text-lg rounded-2xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
               />
             </div>
 
@@ -130,17 +134,18 @@ function LogPageContent() {
             />
 
             {/* Foods Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[520px] overflow-y-auto pr-2 scrollbar-thin">
               {isLoading ? (
-                <div className="col-span-2 text-center py-12 text-muted-foreground">
+                <div className="col-span-2 text-center py-16 text-muted-foreground">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-coral" />
                   Loading foods...
                 </div>
               ) : filteredFoods.length === 0 ? (
-                <div className="col-span-2 text-center py-12">
+                <div className="col-span-2 text-center py-16">
                   <p className="text-muted-foreground mb-4">No foods found</p>
                   <Link href="/foods/add">
-                    <Button variant="outline">
-                      <Plus className="mr-2 h-4 w-4" />
+                    <Button variant="outline" className="rounded-xl border-coral/20 hover:bg-coral/5">
+                      <Plus className="mr-2 h-4 w-4 text-coral" />
                       Add Custom Food
                     </Button>
                   </Link>
@@ -154,7 +159,7 @@ function LogPageContent() {
                       onClick={() => handleSelectFood(food)}
                       className={`cursor-pointer transition-all ${
                         selectedFood?.id === food.id
-                          ? 'ring-2 ring-emerald-500 ring-offset-2 rounded-xl'
+                          ? 'ring-2 ring-coral ring-offset-2 rounded-2xl'
                           : ''
                       }`}
                     >
@@ -168,20 +173,21 @@ function LogPageContent() {
 
           {/* Log Form */}
           <div className="lg:col-span-1">
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 sticky top-20">
-              <CardHeader>
-                <CardTitle className="text-lg font-poppins">
+            <Card className="border-0 card-glow bg-card/90 backdrop-blur-sm sticky top-24 overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-coral/10 blur-3xl" />
+              <CardHeader className="relative">
+                <CardTitle className="text-xl font-display">
                   {selectedFood ? selectedFood.name : 'Select a food'}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative">
                 {selectedFood ? (
                   <div className="space-y-6">
                     {/* Weight Slider */}
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <Label>Amount</Label>
-                        <span className="text-2xl font-bold font-poppins text-emerald-600">
+                        <Label className="font-medium">Amount</Label>
+                        <span className="text-3xl font-bold font-display text-coral">
                           {weight}g
                         </span>
                       </div>
@@ -191,16 +197,16 @@ function LogPageContent() {
                         min={10}
                         max={500}
                         step={5}
-                        className="[&>span]:bg-emerald-500"
+                        className="[&>span]:bg-coral"
                       />
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         {[50, 100, 150, 200, 250].map((preset) => (
                           <Button
                             key={preset}
                             variant="outline"
                             size="sm"
                             onClick={() => setWeight(preset)}
-                            className={weight === preset ? 'border-emerald-500 text-emerald-600' : ''}
+                            className={`rounded-lg ${weight === preset ? 'border-coral bg-coral/10 text-coral' : 'border-coral/20 hover:bg-coral/5'}`}
                           >
                             {preset}g
                           </Button>
@@ -210,17 +216,17 @@ function LogPageContent() {
 
                     {/* Meal Time */}
                     <div className="space-y-2">
-                      <Label>Meal</Label>
+                      <Label className="font-medium">Meal</Label>
                       <Select
                         value={mealTime}
                         onValueChange={(value) => setMealTime(value as MealTime)}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-12 rounded-xl border-coral/20">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="rounded-xl">
                           {(Object.keys(MEAL_TIME_LABELS) as MealTime[]).map((time) => (
-                            <SelectItem key={time} value={time}>
+                            <SelectItem key={time} value={time} className="rounded-lg">
                               <span className="flex items-center gap-2">
                                 <span>{MEAL_TIME_ICONS[time]}</span>
                                 <span>{MEAL_TIME_LABELS[time]}</span>
@@ -233,31 +239,31 @@ function LogPageContent() {
 
                     {/* Nutrition Preview */}
                     {nutrients && (
-                      <div className="p-4 rounded-xl bg-emerald-500/10">
-                        <div className="grid grid-cols-2 gap-3 text-center">
-                          <div>
-                            <p className="text-2xl font-bold font-poppins text-orange-600">
+                      <div className="p-5 rounded-2xl bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10">
+                        <div className="grid grid-cols-2 gap-4 text-center">
+                          <div className="p-3 rounded-xl bg-card/60">
+                            <p className="text-2xl font-bold font-display text-coral">
                               {nutrients.calories}
                             </p>
-                            <p className="text-xs text-muted-foreground">Calories</p>
+                            <p className="text-xs text-muted-foreground font-medium">Calories</p>
                           </div>
-                          <div>
-                            <p className="text-2xl font-bold font-poppins text-emerald-600">
+                          <div className="p-3 rounded-xl bg-card/60">
+                            <p className="text-2xl font-bold font-display text-sage">
                               {nutrients.protein}g
                             </p>
-                            <p className="text-xs text-muted-foreground">Protein</p>
+                            <p className="text-xs text-muted-foreground font-medium">Protein</p>
                           </div>
-                          <div>
-                            <p className="text-2xl font-bold font-poppins text-amber-600">
+                          <div className="p-3 rounded-xl bg-card/60">
+                            <p className="text-2xl font-bold font-display text-honey">
                               {nutrients.carbs}g
                             </p>
-                            <p className="text-xs text-muted-foreground">Carbs</p>
+                            <p className="text-xs text-muted-foreground font-medium">Carbs</p>
                           </div>
-                          <div>
-                            <p className="text-2xl font-bold font-poppins text-blue-600">
+                          <div className="p-3 rounded-xl bg-card/60">
+                            <p className="text-2xl font-bold font-display text-sky">
                               {nutrients.fat}g
                             </p>
-                            <p className="text-xs text-muted-foreground">Fat</p>
+                            <p className="text-xs text-muted-foreground font-medium">Fat</p>
                           </div>
                         </div>
                       </div>
@@ -267,7 +273,7 @@ function LogPageContent() {
                     <Button
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white h-12"
+                      className="w-full btn-gradient text-white h-14 rounded-2xl font-semibold shadow-lg shadow-coral/25"
                     >
                       {isSubmitting ? (
                         <>
@@ -283,9 +289,12 @@ function LogPageContent() {
                     </Button>
                   </div>
                 ) : (
-                  <p className="text-center text-muted-foreground py-8">
-                    Click on a food to select it
-                  </p>
+                  <div className="text-center text-muted-foreground py-12">
+                    <div className="w-16 h-16 rounded-2xl bg-coral/10 flex items-center justify-center mx-auto mb-4">
+                      <UtensilsCrossed className="h-8 w-8 text-coral/50" />
+                    </div>
+                    <p>Click on a food to select it</p>
+                  </div>
                 )}
               </CardContent>
             </Card>

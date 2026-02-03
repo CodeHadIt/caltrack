@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { DM_Sans, Outfit } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -34,12 +35,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
+        className={`${dmSans.variable} ${outfit.variable} font-sans antialiased`}
       >
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/20 dark:from-slate-950 dark:via-emerald-950/20 dark:to-teal-950/10">
-          {children}
+        <div className="relative min-h-screen bg-gradient-warm noise-overlay overflow-hidden">
+          {/* Decorative background blobs */}
+          <div className="blob-shape fixed top-[-10%] right-[-5%] w-[500px] h-[500px] bg-coral/30 dark:bg-coral/10" />
+          <div className="blob-shape fixed bottom-[-15%] left-[-10%] w-[600px] h-[600px] bg-peach/25 dark:bg-peach/8" style={{ animationDelay: '-4s' }} />
+          <div className="blob-shape fixed top-[40%] left-[60%] w-[400px] h-[400px] bg-rose/20 dark:bg-rose/5" style={{ animationDelay: '-2s' }} />
+
+          <div className="relative z-10">
+            {children}
+          </div>
         </div>
-        <Toaster richColors position="top-right" />
+        <Toaster
+          richColors
+          position="top-right"
+          toastOptions={{
+            className: 'font-sans',
+          }}
+        />
       </body>
     </html>
   );

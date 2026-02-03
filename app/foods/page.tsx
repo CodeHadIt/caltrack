@@ -45,18 +45,20 @@ export default function FoodsPage() {
 
   return (
     <AppWrapper>
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold font-poppins flex items-center gap-2">
-              <Apple className="h-7 w-7 text-emerald-600" />
+            <h1 className="text-3xl md:text-4xl font-bold font-display flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-sage/10 flex items-center justify-center">
+                <Apple className="h-6 w-6 text-sage" />
+              </div>
               Food Database
             </h1>
-            <p className="text-muted-foreground">Browse and add foods to your log</p>
+            <p className="text-muted-foreground mt-2">Browse and add foods to your log</p>
           </div>
           <Link href="/foods/add">
-            <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
+            <Button className="btn-gradient text-white rounded-xl shadow-lg shadow-coral/25 font-semibold">
               <Plus className="mr-2 h-4 w-4" />
               Add Custom Food
             </Button>
@@ -65,17 +67,19 @@ export default function FoodsPage() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-coral/10 flex items-center justify-center">
+            <Search className="h-4 w-4 text-coral" />
+          </div>
           <Input
             placeholder="Search foods..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12 text-lg border-slate-200 dark:border-slate-700"
+            className="pl-14 h-14 text-lg rounded-2xl border-coral/20 focus:border-coral/40 focus:ring-coral/20"
           />
         </div>
 
         {/* Category Tabs */}
-        <div className="mb-6">
+        <div className="mb-8">
           <CategoryTabs
             categories={categories}
             selected={selectedCategory}
@@ -85,16 +89,27 @@ export default function FoodsPage() {
 
         {/* Foods Grid */}
         {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground">Loading foods...</div>
+          <div className="text-center py-16 text-muted-foreground">
+            <div className="w-16 h-16 rounded-2xl bg-coral/10 flex items-center justify-center mx-auto mb-4">
+              <Apple className="h-8 w-8 text-coral/50 animate-pulse" />
+            </div>
+            Loading foods...
+          </div>
         ) : filteredFoods.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mx-auto mb-4">
+              <Search className="h-8 w-8 text-muted-foreground/50" />
+            </div>
             <p className="text-muted-foreground mb-4">No foods found</p>
             <Link href="/foods/add">
-              <Button variant="outline">Add Custom Food</Button>
+              <Button variant="outline" className="rounded-xl border-coral/20 hover:bg-coral/5">
+                <Plus className="mr-2 h-4 w-4 text-coral" />
+                Add Custom Food
+              </Button>
             </Link>
           </div>
         ) : selectedCategory ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredFoods.map((food) => {
               const foodCategory = categories.find(c => c.id === food.category_id)
               return (
@@ -105,21 +120,23 @@ export default function FoodsPage() {
             })}
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-10">
             {categories.map((category) => {
               const categoryFoods = groupedFoods[category.id] || []
               if (categoryFoods.length === 0) return null
 
               return (
                 <div key={category.id}>
-                  <h2 className="text-xl font-semibold font-poppins mb-4 flex items-center gap-2">
-                    <span>{category.icon}</span>
+                  <h2 className="text-xl font-bold font-display mb-5 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-coral/10 flex items-center justify-center text-xl">
+                      {category.icon}
+                    </div>
                     <span>{category.name}</span>
-                    <span className="text-sm font-normal text-muted-foreground">
-                      ({categoryFoods.length})
+                    <span className="text-sm font-normal px-2.5 py-0.5 rounded-lg bg-muted/50 text-muted-foreground">
+                      {categoryFoods.length}
                     </span>
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {categoryFoods.map((food) => (
                       <Link key={food.id} href={`/log?food=${food.id}`}>
                         <FoodCard food={food} category={category} showAddButton={false} />

@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { AppWrapper } from '@/components/app-wrapper'
 import {
-  UtensilsCrossed,
   Calculator,
   BarChart3,
   Apple,
   ArrowRight,
-  Flame,
+  Sparkles,
   Target,
-  TrendingUp,
+  Heart,
+  Zap,
 } from 'lucide-react'
 
 const features = [
@@ -20,25 +20,29 @@ const features = [
     icon: Apple,
     title: 'Track Your Food',
     description: 'Log meals with our extensive food database. Add custom foods with full nutritional info.',
-    color: 'from-emerald-500 to-green-500',
+    color: 'bg-gradient-to-br from-coral to-rose',
+    iconBg: 'bg-coral/10',
   },
   {
     icon: BarChart3,
     title: 'Visual Analytics',
     description: 'See your progress with beautiful charts showing daily and weekly calorie trends.',
-    color: 'from-teal-500 to-cyan-500',
+    color: 'bg-gradient-to-br from-sage to-emerald-400',
+    iconBg: 'bg-sage/10',
   },
   {
     icon: Calculator,
     title: 'Smart Calculators',
     description: 'Calculate your TDEE and body fat percentage with scientific formulas.',
-    color: 'from-cyan-500 to-blue-500',
+    color: 'bg-gradient-to-br from-sky to-blue-400',
+    iconBg: 'bg-sky/10',
   },
   {
     icon: Target,
     title: 'Reach Your Goals',
     description: 'Whether losing, maintaining, or gaining weight - track your journey to success.',
-    color: 'from-blue-500 to-indigo-500',
+    color: 'bg-gradient-to-br from-honey to-amber-400',
+    iconBg: 'bg-honey/10',
   },
 ]
 
@@ -47,24 +51,26 @@ export default function Home() {
     <AppWrapper>
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <section className="py-12 md:py-24 text-center">
+        <section className="py-16 md:py-28 text-center">
           <div className="max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-full mb-6">
-              <Flame className="h-4 w-4 text-emerald-600" />
-              <span className="text-sm font-medium text-emerald-700">Start tracking your nutrition today</span>
+            <div className="inline-flex items-center gap-2 bg-coral/10 dark:bg-coral/20 px-5 py-2.5 rounded-full mb-8 animate-fade-in-up">
+              <Sparkles className="h-4 w-4 text-coral" />
+              <span className="text-sm font-semibold text-coral dark:text-coral-light">Start tracking your nutrition today</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold font-poppins mb-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              Your Personal Calorie Tracker
+            <h1 className="text-5xl md:text-7xl font-extrabold font-display mb-8 leading-[1.1] animate-fade-in-up animate-delay-100">
+              <span className="text-gradient">Your Personal</span>
+              <br />
+              <span className="text-foreground">Calorie Tracker</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animate-delay-200">
               Track your meals, monitor macros, and achieve your fitness goals with CalTrack.
-              No account needed to get started!
+              <span className="text-foreground font-medium"> No account needed to get started!</span>
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animate-delay-300">
               <Link href="/dashboard">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-lg px-8 h-14 rounded-xl shadow-lg shadow-emerald-500/25"
+                  className="btn-gradient text-white text-lg px-10 h-14 rounded-2xl shadow-xl shadow-coral/30 font-semibold"
                 >
                   Start Tracking
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -74,9 +80,9 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="text-lg px-8 h-14 rounded-xl border-2"
+                  className="text-lg px-8 h-14 rounded-2xl border-2 border-coral/20 hover:bg-coral/5 hover:border-coral/40 font-medium"
                 >
-                  <Calculator className="mr-2 h-5 w-5" />
+                  <Calculator className="mr-2 h-5 w-5 text-coral" />
                   Try Calculators
                 </Button>
               </Link>
@@ -85,12 +91,16 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="py-12 md:py-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">
+        <section className="py-16 md:py-24">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-sage/10 px-4 py-2 rounded-full mb-4">
+              <Zap className="h-4 w-4 text-sage" />
+              <span className="text-sm font-semibold text-sage">Powerful Features</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold font-display mb-4">
               Everything You Need
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
+            <p className="text-muted-foreground max-w-xl mx-auto text-lg">
               Powerful features to help you understand and manage your nutrition
             </p>
           </div>
@@ -98,18 +108,22 @@ export default function Home() {
             {features.map((feature, index) => (
               <Card
                 key={index}
-                className="border-0 bg-white/60 dark:bg-slate-800/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group border-0 bg-card/80 backdrop-blur-sm card-glow hover-lift cursor-pointer overflow-hidden"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <CardContent className="pt-6">
+                <CardContent className="pt-8 pb-6 relative">
+                  <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-500"
+                    style={{ background: `var(--color-${feature.color.includes('coral') ? 'coral' : feature.color.includes('sage') ? 'sage' : feature.color.includes('sky') ? 'sky' : 'honey'})` }}
+                  />
                   <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}
+                    className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}
                   >
-                    <feature.icon className="h-6 w-6 text-white" />
+                    <feature.icon className="h-7 w-7 text-white" />
                   </div>
-                  <h3 className="font-semibold font-poppins text-lg mb-2">
+                  <h3 className="font-bold font-display text-xl mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
                 </CardContent>
@@ -119,25 +133,26 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-12 md:py-20">
-          <Card className="border-0 bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 shadow-2xl">
-            <CardContent className="py-12">
+        <section className="py-16 md:py-24">
+          <Card className="border-0 bg-gradient-to-br from-coral via-rose to-peach shadow-2xl shadow-coral/20 overflow-hidden relative">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-50" />
+            <CardContent className="py-14 relative">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-                <div>
-                  <div className="text-4xl md:text-5xl font-bold font-poppins mb-2">40+</div>
-                  <div className="text-emerald-100">Default Foods</div>
+                <div className="group">
+                  <div className="text-5xl md:text-6xl font-extrabold font-display mb-2 group-hover:scale-110 transition-transform">40+</div>
+                  <div className="text-white/80 font-medium">Default Foods</div>
                 </div>
-                <div>
-                  <div className="text-4xl md:text-5xl font-bold font-poppins mb-2">6</div>
-                  <div className="text-emerald-100">Categories</div>
+                <div className="group">
+                  <div className="text-5xl md:text-6xl font-extrabold font-display mb-2 group-hover:scale-110 transition-transform">6</div>
+                  <div className="text-white/80 font-medium">Categories</div>
                 </div>
-                <div>
-                  <div className="text-4xl md:text-5xl font-bold font-poppins mb-2">2</div>
-                  <div className="text-emerald-100">Calculators</div>
+                <div className="group">
+                  <div className="text-5xl md:text-6xl font-extrabold font-display mb-2 group-hover:scale-110 transition-transform">2</div>
+                  <div className="text-white/80 font-medium">Calculators</div>
                 </div>
-                <div>
-                  <div className="text-4xl md:text-5xl font-bold font-poppins mb-2">0</div>
-                  <div className="text-emerald-100">Signup Required</div>
+                <div className="group">
+                  <div className="text-5xl md:text-6xl font-extrabold font-display mb-2 group-hover:scale-110 transition-transform">0</div>
+                  <div className="text-white/80 font-medium">Signup Required</div>
                 </div>
               </div>
             </CardContent>
@@ -145,20 +160,24 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 md:py-20 text-center">
+        <section className="py-16 md:py-24 text-center">
           <div className="max-w-2xl mx-auto">
-            <TrendingUp className="h-12 w-12 mx-auto mb-6 text-emerald-500" />
-            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">
-              Ready to Transform Your Health?
+            <div className="w-20 h-20 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-coral/20 to-rose/20 flex items-center justify-center">
+              <Heart className="h-10 w-10 text-coral" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold font-display mb-6">
+              Ready to Transform
+              <br />
+              <span className="text-gradient">Your Health?</span>
             </h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-muted-foreground mb-10 text-lg max-w-lg mx-auto">
               Join thousands of users who are already tracking their nutrition and achieving their goals.
-              Start for free, no credit card required.
+              <span className="text-foreground font-medium"> Start for free, no credit card required.</span>
             </p>
             <Link href="/dashboard">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-lg px-8 h-14 rounded-xl shadow-lg shadow-emerald-500/25"
+                className="btn-gradient text-white text-lg px-12 h-16 rounded-2xl shadow-xl shadow-coral/30 font-semibold"
               >
                 Get Started for Free
                 <ArrowRight className="ml-2 h-5 w-5" />

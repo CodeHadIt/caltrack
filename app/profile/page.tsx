@@ -187,22 +187,27 @@ export default function ProfilePage() {
 
   return (
     <AppWrapper>
-      <main className="container mx-auto px-4 py-6 max-w-2xl">
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold font-poppins flex items-center gap-2">
-            <User className="h-7 w-7 text-emerald-600" />
+      <main className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold font-display flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-coral/10 flex items-center justify-center">
+              <User className="h-6 w-6 text-coral" />
+            </div>
             Profile
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mt-2">
             Manage your personal information and preferences
           </p>
         </div>
 
         {/* Account Info */}
-        <Card className="mb-6 border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
-          <CardHeader>
-            <CardTitle className="text-lg font-poppins flex items-center gap-2">
-              <Shield className="h-5 w-5 text-emerald-600" />
+        <Card className="mb-6 border-0 card-glow bg-card/80 backdrop-blur-sm overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-coral/10 blur-3xl" />
+          <CardHeader className="relative">
+            <CardTitle className="text-lg font-display flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-sage/10 flex items-center justify-center">
+                <Shield className="h-5 w-5 text-sage" />
+              </div>
               Account
             </CardTitle>
             <CardDescription>
@@ -211,14 +216,14 @@ export default function ProfilePage() {
                 : `Signed in as ${user?.email}`}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative">
             {isGuest ? (
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <p className="text-sm text-muted-foreground">
                   Create an account to sync your data across devices and never lose your progress.
                 </p>
                 <Link href="/auth/signup">
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white whitespace-nowrap">
+                  <Button className="btn-gradient text-white rounded-xl shadow-lg shadow-coral/25 font-semibold whitespace-nowrap">
                     Create Account
                   </Button>
                 </Link>
@@ -232,9 +237,9 @@ export default function ProfilePage() {
         </Card>
 
         {/* Personal Info */}
-        <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800">
+        <Card className="border-0 card-glow bg-card/80 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="text-lg font-poppins">Personal Information</CardTitle>
+            <CardTitle className="text-lg font-display">Personal Information</CardTitle>
             <CardDescription>
               This information is used to calculate your daily calorie needs
             </CardDescription>
@@ -356,7 +361,7 @@ export default function ProfilePage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+              className="w-full btn-gradient text-white h-12 rounded-xl font-semibold shadow-lg shadow-coral/25"
             >
               {isSaving ? (
                 <>
