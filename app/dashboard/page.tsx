@@ -16,6 +16,7 @@ import { useFoodLog } from '@/lib/hooks/use-food-log'
 import { getToday, formatDateShort } from '@/lib/utils'
 import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp, Share2, Sparkles } from 'lucide-react'
 import { MealTime } from '@/types'
+import { toast } from 'sonner'
 
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(getToday())
@@ -72,7 +73,12 @@ export default function DashboardPage() {
   const isToday = selectedDate === getToday()
 
   const handleDeleteLog = async (logId: string) => {
-    await removeLog(logId)
+    const { error } = await removeLog(logId)
+    if (error) {
+      toast.error('Failed to delete food log')
+    } else {
+      toast.success('Food removed from log')
+    }
   }
 
   return (
