@@ -22,8 +22,13 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
 import { toast } from 'sonner'
 import { calculateCaloriesFromFood, getToday } from '@/lib/utils'
-import { Search, ArrowLeft, UtensilsCrossed, Loader2, Plus, Check } from 'lucide-react'
+import { Search, ArrowLeft, UtensilsCrossed, Loader2, Plus, Check, X, CheckCircle2 } from 'lucide-react'
 import { FoodItem, MealTime, MEAL_TIME_LABELS, MEAL_TIME_ICONS } from '@/types'
+
+interface SelectedFoodEntry {
+  food: FoodItem
+  weight: number
+}
 
 function LogPageContent() {
   const router = useRouter()
@@ -32,8 +37,7 @@ function LogPageContent() {
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null)
-  const [weight, setWeight] = useState(100)
+  const [selectedFoods, setSelectedFoods] = useState<Map<string, SelectedFoodEntry>>(new Map())
   const [mealTime, setMealTime] = useState<MealTime>('lunch')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -50,7 +54,7 @@ function LogPageContent() {
     if (preselectedFoodId && foods.length > 0) {
       const food = foods.find((f) => f.id === preselectedFoodId)
       if (food) {
-        setSelectedFood(food)
+        setSelectedFoods(new Map([[food.id, { food, weight: 100 }]]))
       }
     }
   }, [preselectedFoodId, foods])
@@ -63,30 +67,77 @@ function LogPageContent() {
     })
   }, [foods, searchQuery, selectedCategory])
 
-  const handleSelectFood = (food: FoodItem) => {
-    setSelectedFood(food)
-    setWeight(100)
+  const handleToggleFood = (food: FoodItem) => {
+    setSelectedFoods(prev => {
+      const newMap = new Map(prev)
+      if (newMap.has(food.id)) {
+        newMap.delete(food.id)
+      } else {
+        newMap.set(food.id, { food, weight: 100 })
+      }
+      return newMap
+    })
+  }
+
+  const handleUpdateWeight = (foodId: string, weight: number) => {
+    setSelectedFoods(prev => {
+      const newMap = new Map(prev)
+      const entry = newMap.get(foodId)
+      if (entry) {
+        newMap.set(foodId, { ...entry, weight: Math.max(1, Math.min(1000, weight)) })
+      }
+      return newMap
+    })
+  }
+
+  const handleRemoveFood = (foodId: string) => {
+    setSelectedFoods(prev => {
+      const newMap = new Map(prev)
+      newMap.delete(foodId)
+      return newMap
+    })
   }
 
   const handleSubmit = async () => {
-    if (!selectedFood) return
+    if (selectedFoods.size === 0) return
 
     setIsSubmitting(true)
-    const { error } = await addLog(selectedFood.id, weight, mealTime, getToday())
+    const today = getToday()
+    const entries = Array.from(selectedFoods.values())
 
-    if (error) {
-      toast.error('Failed to log food')
-      setIsSubmitting(false)
-      return
+    let hasError = false
+    for (const entry of entries) {
+      const { error } = await addLog(entry.food.id, entry.weight, mealTime, today)
+      if (error) {
+        hasError = true
+        toast.error(`Failed to log ${entry.food.name}`)
+      }
     }
 
-    toast.success('Food logged successfully!')
-    router.push('/dashboard')
+    if (!hasError) {
+      toast.success(`${entries.length} food${entries.length > 1 ? 's' : ''} logged successfully!`)
+      router.push('/dashboard')
+    } else {
+      setIsSubmitting(false)
+    }
   }
 
-  const nutrients = selectedFood
-    ? calculateCaloriesFromFood(selectedFood, weight)
-    : null
+  // Calculate total nutrients for all selected foods
+  const totalNutrients = useMemo(() => {
+    const entries = Array.from(selectedFoods.values())
+    return entries.reduce(
+      (acc, entry) => {
+        const nutrients = calculateCaloriesFromFood(entry.food, entry.weight)
+        return {
+          calories: acc.calories + nutrients.calories,
+          protein: acc.protein + nutrients.protein,
+          carbs: acc.carbs + nutrients.carbs,
+          fat: acc.fat + nutrients.fat,
+        }
+      },
+      { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    )
+  }, [selectedFoods])
 
   return (
     <AppWrapper>
@@ -153,16 +204,22 @@ function LogPageContent() {
               ) : (
                 filteredFoods.map((food) => {
                   const foodCategory = categories.find(c => c.id === food.category_id)
+                  const isSelected = selectedFoods.has(food.id)
                   return (
                     <div
                       key={food.id}
-                      onClick={() => handleSelectFood(food)}
-                      className={`cursor-pointer transition-all ${
-                        selectedFood?.id === food.id
+                      onClick={() => handleToggleFood(food)}
+                      className={`cursor-pointer transition-all relative ${
+                        isSelected
                           ? 'ring-2 ring-coral ring-offset-2 rounded-2xl'
                           : ''
                       }`}
                     >
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-coral flex items-center justify-center">
+                          <CheckCircle2 className="h-4 w-4 text-white" />
+                        </div>
+                      )}
                       <FoodCard food={food} category={foodCategory} showAddButton={false} />
                     </div>
                   )
@@ -177,41 +234,76 @@ function LogPageContent() {
               <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-coral/10 blur-3xl" />
               <CardHeader className="relative">
                 <CardTitle className="text-xl font-display">
-                  {selectedFood ? selectedFood.name : 'Select a food'}
+                  {selectedFoods.size > 0
+                    ? `${selectedFoods.size} food${selectedFoods.size > 1 ? 's' : ''} selected`
+                    : 'Select foods to log'}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative">
-                {selectedFood ? (
+                {selectedFoods.size > 0 ? (
                   <div className="space-y-6">
-                    {/* Weight Slider */}
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Label className="font-medium">Amount</Label>
-                        <span className="text-3xl font-bold font-display text-coral">
-                          {weight}g
-                        </span>
-                      </div>
-                      <Slider
-                        value={[weight]}
-                        onValueChange={([value]) => setWeight(value)}
-                        min={10}
-                        max={500}
-                        step={5}
-                        className="[&>span]:bg-coral"
-                      />
-                      <div className="flex gap-2 flex-wrap">
-                        {[50, 100, 150, 200, 250].map((preset) => (
-                          <Button
-                            key={preset}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setWeight(preset)}
-                            className={`rounded-lg ${weight === preset ? 'border-coral bg-coral/10 text-coral' : 'border-coral/20 hover:bg-coral/5'}`}
-                          >
-                            {preset}g
-                          </Button>
-                        ))}
-                      </div>
+                    {/* Selected Foods List */}
+                    <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                      {Array.from(selectedFoods.entries()).map(([foodId, entry]) => (
+                        <div key={foodId} className="p-4 rounded-xl bg-muted/50 border border-coral/10">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold truncate">{entry.food.name}</h4>
+                              <p className="text-xs text-muted-foreground">
+                                {Math.round(entry.food.calories_per_100g * entry.weight / 100)} cal
+                              </p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveFood(foodId)}
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+
+                          {/* Weight Controls */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <Input
+                                type="number"
+                                value={entry.weight}
+                                onChange={(e) => handleUpdateWeight(foodId, parseInt(e.target.value) || 0)}
+                                min={1}
+                                max={1000}
+                                className="w-20 h-9 text-center rounded-lg border-coral/20 focus:border-coral/40"
+                              />
+                              <span className="text-sm text-muted-foreground">grams</span>
+                            </div>
+                            <Slider
+                              value={[entry.weight]}
+                              onValueChange={([value]) => handleUpdateWeight(foodId, value)}
+                              min={10}
+                              max={500}
+                              step={5}
+                              className="[&>span]:bg-coral"
+                            />
+                            <div className="flex gap-1.5 flex-wrap">
+                              {[50, 100, 150, 200].map((preset) => (
+                                <Button
+                                  key={preset}
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleUpdateWeight(foodId, preset)}
+                                  className={`h-7 px-2 text-xs rounded-md ${
+                                    entry.weight === preset
+                                      ? 'border-coral bg-coral/10 text-coral'
+                                      : 'border-coral/20 hover:bg-coral/5'
+                                  }`}
+                                >
+                                  {preset}g
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
 
                     {/* Meal Time */}
@@ -237,37 +329,38 @@ function LogPageContent() {
                       </Select>
                     </div>
 
-                    {/* Nutrition Preview */}
-                    {nutrients && (
-                      <div className="p-5 rounded-2xl bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10">
-                        <div className="grid grid-cols-2 gap-4 text-center">
-                          <div className="p-3 rounded-xl bg-card/60">
-                            <p className="text-2xl font-bold font-display text-coral">
-                              {nutrients.calories}
-                            </p>
-                            <p className="text-xs text-muted-foreground font-medium">Calories</p>
-                          </div>
-                          <div className="p-3 rounded-xl bg-card/60">
-                            <p className="text-2xl font-bold font-display text-sage">
-                              {nutrients.protein}g
-                            </p>
-                            <p className="text-xs text-muted-foreground font-medium">Protein</p>
-                          </div>
-                          <div className="p-3 rounded-xl bg-card/60">
-                            <p className="text-2xl font-bold font-display text-honey">
-                              {nutrients.carbs}g
-                            </p>
-                            <p className="text-xs text-muted-foreground font-medium">Carbs</p>
-                          </div>
-                          <div className="p-3 rounded-xl bg-card/60">
-                            <p className="text-2xl font-bold font-display text-sky">
-                              {nutrients.fat}g
-                            </p>
-                            <p className="text-xs text-muted-foreground font-medium">Fat</p>
-                          </div>
+                    {/* Total Nutrition Preview */}
+                    <div className="p-5 rounded-2xl bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10">
+                      <p className="text-xs text-muted-foreground font-medium mb-3 text-center">
+                        Total Nutrition
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 text-center">
+                        <div className="p-3 rounded-xl bg-card/60">
+                          <p className="text-2xl font-bold font-display text-coral">
+                            {totalNutrients.calories}
+                          </p>
+                          <p className="text-xs text-muted-foreground font-medium">Calories</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-card/60">
+                          <p className="text-2xl font-bold font-display text-sage">
+                            {totalNutrients.protein}g
+                          </p>
+                          <p className="text-xs text-muted-foreground font-medium">Protein</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-card/60">
+                          <p className="text-2xl font-bold font-display text-honey">
+                            {totalNutrients.carbs}g
+                          </p>
+                          <p className="text-xs text-muted-foreground font-medium">Carbs</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-card/60">
+                          <p className="text-2xl font-bold font-display text-sky">
+                            {totalNutrients.fat}g
+                          </p>
+                          <p className="text-xs text-muted-foreground font-medium">Fat</p>
                         </div>
                       </div>
-                    )}
+                    </div>
 
                     {/* Submit Button */}
                     <Button
@@ -283,7 +376,7 @@ function LogPageContent() {
                       ) : (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          Log Food
+                          Log {selectedFoods.size} Food{selectedFoods.size > 1 ? 's' : ''}
                         </>
                       )}
                     </Button>
@@ -293,7 +386,8 @@ function LogPageContent() {
                     <div className="w-16 h-16 rounded-2xl bg-coral/10 flex items-center justify-center mx-auto mb-4">
                       <UtensilsCrossed className="h-8 w-8 text-coral/50" />
                     </div>
-                    <p>Click on a food to select it</p>
+                    <p>Click on foods to select them</p>
+                    <p className="text-xs mt-2">You can select multiple foods</p>
                   </div>
                 )}
               </CardContent>
