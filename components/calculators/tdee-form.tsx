@@ -63,8 +63,9 @@ export function TDEEForm() {
             </div>
             TDEE Calculator
           </CardTitle>
-          <CardDescription>
-            Calculate your Total Daily Energy Expenditure using the Mifflin-St Jeor equation
+          <CardDescription className="space-y-1">
+            <span className="block">Calculate your Total Daily Energy Expenditure using the Mifflin-St Jeor equation.</span>
+            <span className="block">This estimates the total number of calories you need to consume daily to achieve your fitness goals.</span>
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
