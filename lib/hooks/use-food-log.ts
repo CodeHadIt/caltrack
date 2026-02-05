@@ -229,6 +229,53 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
     }
   }, [logs])
 
+  const fetchWeeklyCalories = useCallback(async (dates: string[]): Promise<{ date: string; calories: number }[]> => {
+    const allFoods = await fetchFoods()
+
+    if (isGuest) {
+      return dates.map(date => {
+        const dayLogs = getGuestFoodLogs(date)
+        const totalCalories = dayLogs.reduce((acc, log) => {
+          const food = allFoods.find(f => f.id === log.food_item_id)
+          if (food) {
+            return acc + (food.calories_per_100g * log.weight_grams / 100)
+          }
+          return acc
+        }, 0)
+        return { date, calories: Math.round(totalCalories) }
+      })
+    }
+
+    // For authenticated users, fetch all logs for the date range
+    const { data: weekLogs } = await supabase
+      .from('food_logs')
+      .select(`
+        date,
+        weight_grams,
+        food_item:food_items(calories_per_100g)
+      `)
+      .eq('user_id', userId)
+      .in('date', dates)
+
+    // Aggregate calories by date
+    const caloriesByDate = new Map<string, number>()
+    dates.forEach(date => caloriesByDate.set(date, 0))
+
+    if (weekLogs) {
+      weekLogs.forEach((log: { date: string; weight_grams: number; food_item: { calories_per_100g: number } | null }) => {
+        if (log.food_item) {
+          const current = caloriesByDate.get(log.date) || 0
+          caloriesByDate.set(log.date, current + (log.food_item.calories_per_100g * log.weight_grams / 100))
+        }
+      })
+    }
+
+    return dates.map(date => ({
+      date,
+      calories: Math.round(caloriesByDate.get(date) || 0)
+    }))
+  }, [isGuest, userId, supabase, fetchFoods])
+
   return {
     logs,
     foods,
@@ -239,6 +286,7 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
     removeLog,
     addCustomFood,
     getDailySummary,
+    fetchWeeklyCalories,
     categories,
   }
 }

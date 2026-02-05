@@ -20,8 +20,9 @@ import { MealTime } from '@/types'
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(getToday())
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
+  const [weeklyData, setWeeklyData] = useState<Array<{ date: string; calories: number; label: string }>>([])
   const { userId, isGuest, isLoading: authLoading } = useAuth()
-  const { logs, fetchLogs, removeLog, getDailySummary, isLoading } = useFoodLog(
+  const { logs, fetchLogs, removeLog, getDailySummary, fetchWeeklyCalories, isLoading } = useFoodLog(
     userId,
     isGuest
   )
@@ -31,6 +32,24 @@ export default function DashboardPage() {
       fetchLogs(selectedDate)
     }
   }, [selectedDate, authLoading, fetchLogs])
+
+  // Fetch weekly calorie data
+  useEffect(() => {
+    if (!authLoading) {
+      const dates = Array.from({ length: 7 }, (_, i) =>
+        format(subDays(new Date(), 6 - i), 'yyyy-MM-dd')
+      )
+
+      fetchWeeklyCalories(dates).then(data => {
+        const formattedData = data.map(item => ({
+          date: format(parseISO(item.date), 'MMM d'),
+          calories: item.calories,
+          label: format(parseISO(item.date), 'EEE'),
+        }))
+        setWeeklyData(formattedData)
+      })
+    }
+  }, [authLoading, fetchWeeklyCalories, logs]) // Re-fetch when logs change
 
   const summary = getDailySummary(selectedDate)
 
@@ -51,17 +70,6 @@ export default function DashboardPage() {
   }
 
   const isToday = selectedDate === getToday()
-
-  // Generate mock weekly data for charts
-  const weeklyData = Array.from({ length: 7 }, (_, i) => {
-    const date = format(subDays(new Date(), 6 - i), 'yyyy-MM-dd')
-    const isSelected = date === selectedDate
-    return {
-      date: format(parseISO(date), 'MMM d'),
-      calories: isSelected ? summary.totalCalories : Math.floor(Math.random() * 500 + 1500),
-      label: format(parseISO(date), 'EEE'),
-    }
-  })
 
   const handleDeleteLog = async (logId: string) => {
     await removeLog(logId)
