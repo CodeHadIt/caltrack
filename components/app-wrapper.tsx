@@ -19,7 +19,7 @@ export function AppWrapper({ children, showNav = true }: AppWrapperProps) {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       {showNav && (
         <Navbar
           isGuest={isGuest}
@@ -27,7 +27,16 @@ export function AppWrapper({ children, showNav = true }: AppWrapperProps) {
           onSignOut={handleSignOut}
         />
       )}
-      {children}
-    </>
+      <div className="flex-1">
+        {children}
+      </div>
+      <footer className="py-6 border-t border-coral/10 bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} CalTrack. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
   )
 }
