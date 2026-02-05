@@ -4,20 +4,43 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ProgressRing } from '@/components/charts/progress-ring'
 import { MacroPie } from '@/components/charts/macro-pie'
-import { DailySummary as DailySummaryType } from '@/types'
-import { Flame, Beef, Wheat, Droplet } from 'lucide-react'
+import { DailySummary as DailySummaryType, MacroRecommendation, GOAL_LABELS, GOAL_ICONS } from '@/types'
+import { Flame, Beef, Wheat, Droplet, Target } from 'lucide-react'
+import Link from 'next/link'
 
 interface DailySummaryProps {
   summary: DailySummaryType
   calorieGoal?: number
+  macroTargets?: MacroRecommendation | null
 }
 
-export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps) {
-  const percentage = Math.min((summary.totalCalories / calorieGoal) * 100, 100)
-  const remaining = Math.max(calorieGoal - summary.totalCalories, 0)
+export function DailySummary({ summary, calorieGoal = 2000, macroTargets }: DailySummaryProps) {
+  // Use macro targets if available, otherwise use defaults
+  const effectiveCalorieGoal = macroTargets?.calories || calorieGoal
+  const proteinGoal = macroTargets?.protein.grams || 150
+  const carbsGoal = macroTargets?.carbs.grams || 250
+  const fatGoal = macroTargets?.fat.grams || 65
+
+  const percentage = Math.min((summary.totalCalories / effectiveCalorieGoal) * 100, 100)
+  const remaining = Math.max(effectiveCalorieGoal - summary.totalCalories, 0)
 
   return (
     <div className="space-y-5">
+      {/* Goal Banner */}
+      {macroTargets && (
+        <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-sage/10 to-emerald-500/10 border border-sage/20">
+          <div className="flex items-center gap-2">
+            <Target className="h-4 w-4 text-sage" />
+            <span className="text-sm font-medium">
+              {GOAL_ICONS[macroTargets.goal]} {GOAL_LABELS[macroTargets.goal]} Target
+            </span>
+          </div>
+          <Link href="/calculators" className="text-xs text-sage hover:underline">
+            Adjust
+          </Link>
+        </div>
+      )}
+
       <Card className="border-0 bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10 card-glow overflow-hidden relative">
         <div className="absolute top-0 right-0 w-60 h-60 -mr-20 -mt-20 rounded-full bg-coral/10 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-40 h-40 -ml-10 -mb-10 rounded-full bg-peach/10 blur-3xl" />
@@ -26,7 +49,7 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
             <div className="flex flex-col items-center">
               <ProgressRing
                 value={summary.totalCalories}
-                max={calorieGoal}
+                max={effectiveCalorieGoal}
                 size={160}
                 strokeWidth={14}
                 unit="kcal"
@@ -43,7 +66,7 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
               <p className="text-sm text-muted-foreground mt-3 font-medium">
                 {remaining > 0
                   ? `${remaining} kcal remaining`
-                  : `${Math.abs(calorieGoal - summary.totalCalories)} kcal over`}
+                  : `${Math.abs(effectiveCalorieGoal - summary.totalCalories)} kcal over`}
               </p>
             </div>
 
@@ -70,9 +93,10 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
             <p className="text-3xl font-bold font-display mt-3">
               {summary.totalCalories}
             </p>
+            <p className="text-xs text-muted-foreground">/ {effectiveCalorieGoal}</p>
             <Progress
-              value={(summary.totalCalories / calorieGoal) * 100}
-              className="h-2 mt-3 bg-coral/10 dark:bg-coral/20 [&>div]:bg-coral rounded-full"
+              value={(summary.totalCalories / effectiveCalorieGoal) * 100}
+              className="h-2 mt-2 bg-coral/10 dark:bg-coral/20 [&>div]:bg-coral rounded-full"
             />
           </CardContent>
         </Card>
@@ -88,9 +112,10 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
             <p className="text-3xl font-bold font-display mt-3">
               {summary.totalProtein}g
             </p>
+            <p className="text-xs text-muted-foreground">/ {proteinGoal}g</p>
             <Progress
-              value={(summary.totalProtein / 150) * 100}
-              className="h-2 mt-3 bg-sage/10 dark:bg-sage/20 [&>div]:bg-sage rounded-full"
+              value={(summary.totalProtein / proteinGoal) * 100}
+              className="h-2 mt-2 bg-sage/10 dark:bg-sage/20 [&>div]:bg-sage rounded-full"
             />
           </CardContent>
         </Card>
@@ -106,9 +131,10 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
             <p className="text-3xl font-bold font-display mt-3">
               {summary.totalCarbs}g
             </p>
+            <p className="text-xs text-muted-foreground">/ {carbsGoal}g</p>
             <Progress
-              value={(summary.totalCarbs / 250) * 100}
-              className="h-2 mt-3 bg-honey/10 dark:bg-honey/20 [&>div]:bg-honey rounded-full"
+              value={(summary.totalCarbs / carbsGoal) * 100}
+              className="h-2 mt-2 bg-honey/10 dark:bg-honey/20 [&>div]:bg-honey rounded-full"
             />
           </CardContent>
         </Card>
@@ -124,9 +150,10 @@ export function DailySummary({ summary, calorieGoal = 2000 }: DailySummaryProps)
             <p className="text-3xl font-bold font-display mt-3">
               {summary.totalFat}g
             </p>
+            <p className="text-xs text-muted-foreground">/ {fatGoal}g</p>
             <Progress
-              value={(summary.totalFat / 65) * 100}
-              className="h-2 mt-3 bg-sky/10 dark:bg-sky/20 [&>div]:bg-sky rounded-full"
+              value={(summary.totalFat / fatGoal) * 100}
+              className="h-2 mt-2 bg-sky/10 dark:bg-sky/20 [&>div]:bg-sky rounded-full"
             />
           </CardContent>
         </Card>

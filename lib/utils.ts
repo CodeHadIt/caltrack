@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { format, parseISO } from 'date-fns'
-import { ActivityLevel, Gender, ACTIVITY_MULTIPLIERS, TDEEResult, BodyFatResult, FoodItem, FoodLog } from '@/types'
+import { ActivityLevel, Gender, Goal, ACTIVITY_MULTIPLIERS, TDEEResult, BodyFatResult, FoodItem, FoodLog, MacroRecommendation } from '@/types'
 import { BODY_FAT_CATEGORIES } from './constants'
 
 export function cn(...inputs: ClassValue[]) {
@@ -133,5 +133,62 @@ export function getMacroColor(macro: 'protein' | 'carbs' | 'fat'): string {
       return '#f59e0b' // amber
     case 'fat':
       return '#3b82f6' // blue
+  }
+}
+
+// Macro ratios based on goal
+// Protein: 4 calories per gram
+// Carbs: 4 calories per gram
+// Fat: 9 calories per gram
+const MACRO_RATIOS: Record<Goal, { protein: number; carbs: number; fat: number }> = {
+  lose: { protein: 0.40, carbs: 0.35, fat: 0.25 },    // High protein for muscle retention during cut
+  maintain: { protein: 0.30, carbs: 0.40, fat: 0.30 }, // Balanced macros
+  gain: { protein: 0.30, carbs: 0.45, fat: 0.25 },     // Higher carbs for energy and muscle building
+}
+
+export function calculateMacros(tdee: number, goal: Goal): MacroRecommendation {
+  // Adjust calories based on goal
+  let targetCalories: number
+  switch (goal) {
+    case 'lose':
+      targetCalories = tdee - 500 // 500 calorie deficit
+      break
+    case 'gain':
+      targetCalories = tdee + 500 // 500 calorie surplus
+      break
+    default:
+      targetCalories = tdee
+  }
+
+  const ratios = MACRO_RATIOS[goal]
+
+  // Calculate calories from each macro
+  const proteinCalories = Math.round(targetCalories * ratios.protein)
+  const carbsCalories = Math.round(targetCalories * ratios.carbs)
+  const fatCalories = Math.round(targetCalories * ratios.fat)
+
+  // Convert to grams
+  const proteinGrams = Math.round(proteinCalories / 4)
+  const carbsGrams = Math.round(carbsCalories / 4)
+  const fatGrams = Math.round(fatCalories / 9)
+
+  return {
+    calories: targetCalories,
+    protein: {
+      grams: proteinGrams,
+      calories: proteinCalories,
+      percentage: Math.round(ratios.protein * 100),
+    },
+    carbs: {
+      grams: carbsGrams,
+      calories: carbsCalories,
+      percentage: Math.round(ratios.carbs * 100),
+    },
+    fat: {
+      grams: fatGrams,
+      calories: fatCalories,
+      percentage: Math.round(ratios.fat * 100),
+    },
+    goal,
   }
 }

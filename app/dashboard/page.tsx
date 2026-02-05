@@ -13,15 +13,17 @@ import { WeeklyTrend } from '@/components/charts/weekly-trend'
 import { ShareDialog } from '@/components/share/share-dialog'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
+import { getMacroRecommendation } from '@/lib/storage/local-storage'
 import { getToday, formatDateShort } from '@/lib/utils'
 import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp, Share2, Sparkles } from 'lucide-react'
-import { MealTime } from '@/types'
+import { MealTime, MacroRecommendation } from '@/types'
 import { toast } from 'sonner'
 
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(getToday())
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const [weeklyData, setWeeklyData] = useState<Array<{ date: string; calories: number; label: string }>>([])
+  const [macroTargets, setMacroTargets] = useState<MacroRecommendation | null>(null)
   const { userId, isGuest, isLoading: authLoading } = useAuth()
   const { logs, fetchLogs, removeLog, getDailySummary, fetchWeeklyCalories, isLoading } = useFoodLog(
     userId,
@@ -33,6 +35,12 @@ export default function DashboardPage() {
       fetchLogs(selectedDate)
     }
   }, [selectedDate, authLoading, fetchLogs])
+
+  // Load saved macro targets
+  useEffect(() => {
+    const savedMacros = getMacroRecommendation()
+    setMacroTargets(savedMacros)
+  }, [])
 
   // Fetch weekly calorie data
   useEffect(() => {
@@ -143,7 +151,7 @@ export default function DashboardPage() {
 
         {/* Daily Summary */}
         <div className="mb-8">
-          <DailySummary summary={summary} calorieGoal={2000} />
+          <DailySummary summary={summary} calorieGoal={2000} macroTargets={macroTargets} />
         </div>
 
         {/* Meals Grid */}

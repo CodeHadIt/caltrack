@@ -13,9 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Calculator, Flame, TrendingDown, TrendingUp, Activity } from 'lucide-react'
-import { calculateTDEE } from '@/lib/utils'
-import { ActivityLevel, Gender, ACTIVITY_LABELS, TDEEResult } from '@/types'
+import { Calculator, Flame, TrendingDown, TrendingUp, Activity, Target, Check } from 'lucide-react'
+import { calculateTDEE, calculateMacros } from '@/lib/utils'
+import { saveMacroRecommendation } from '@/lib/storage/local-storage'
+import { ActivityLevel, Gender, Goal, ACTIVITY_LABELS, GOAL_LABELS, GOAL_ICONS, TDEEResult, MacroRecommendation } from '@/types'
+import { toast } from 'sonner'
 
 export function TDEEForm() {
   const [weight, setWeight] = useState('')
@@ -23,7 +25,9 @@ export function TDEEForm() {
   const [age, setAge] = useState('')
   const [gender, setGender] = useState<Gender>('male')
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate')
+  const [goal, setGoal] = useState<Goal>('maintain')
   const [result, setResult] = useState<TDEEResult | null>(null)
+  const [macros, setMacros] = useState<MacroRecommendation | null>(null)
 
   const handleCalculate = () => {
     if (!weight || !height || !age) return
@@ -36,6 +40,17 @@ export function TDEEForm() {
       activityLevel
     )
     setResult(tdeeResult)
+
+    // Calculate macro recommendations based on goal
+    const macroRecommendation = calculateMacros(tdeeResult.tdee, goal)
+    setMacros(macroRecommendation)
+  }
+
+  const handleSaveToDashboard = () => {
+    if (macros) {
+      saveMacroRecommendation(macros)
+      toast.success('Macro targets saved to dashboard!')
+    }
   }
 
   return (
@@ -126,6 +141,31 @@ export function TDEEForm() {
             </Select>
           </div>
 
+          <div className="space-y-2">
+            <Label className="font-medium flex items-center gap-2">
+              <Target className="h-4 w-4 text-coral" />
+              Weight Goal
+            </Label>
+            <Select
+              value={goal}
+              onValueChange={(value) => setGoal(value as Goal)}
+            >
+              <SelectTrigger className="h-11 rounded-xl border-coral/20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                {(Object.keys(GOAL_LABELS) as Goal[]).map((g) => (
+                  <SelectItem key={g} value={g} className="rounded-lg">
+                    <span className="flex items-center gap-2">
+                      <span>{GOAL_ICONS[g]}</span>
+                      <span>{GOAL_LABELS[g]}</span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button
             onClick={handleCalculate}
             disabled={!weight || !height || !age}
@@ -142,7 +182,7 @@ export function TDEEForm() {
           <CardHeader>
             <CardTitle className="text-lg font-display">Your Results</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
                 <div className="flex items-center justify-center gap-2 text-sage mb-2">
@@ -181,9 +221,106 @@ export function TDEEForm() {
               </div>
             </div>
 
-            <p className="text-sm text-muted-foreground mt-4 text-center">
-              TDEE = BMR × Activity Multiplier. For weight loss, aim for a 500 calorie deficit. For weight gain, aim for a 500 calorie surplus.
+            <p className="text-sm text-muted-foreground text-center">
+              TDEE = BMR × Activity Multiplier
             </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {macros && (
+        <Card className="border-0 bg-gradient-to-br from-sage/10 via-emerald-500/10 to-teal-500/10 card-glow">
+          <CardHeader>
+            <CardTitle className="text-lg font-display flex items-center gap-2">
+              {GOAL_ICONS[macros.goal]} Recommended Daily Macros for {GOAL_LABELS[macros.goal]}
+            </CardTitle>
+            <CardDescription>
+              Based on your TDEE and {macros.goal === 'lose' ? 'a 500 calorie deficit' : macros.goal === 'gain' ? 'a 500 calorie surplus' : 'maintenance calories'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Daily Calorie Target */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-coral to-rose text-white text-center shadow-lg shadow-coral/25">
+              <p className="text-sm font-semibold mb-1">Daily Calorie Target</p>
+              <p className="text-3xl font-bold font-display">{macros.calories}</p>
+              <p className="text-xs opacity-80">kcal/day</p>
+            </div>
+
+            {/* Macro Breakdown */}
+            <div className="grid grid-cols-3 gap-4">
+              {/* Protein */}
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-2">
+                  <span className="text-xl">🥩</span>
+                </div>
+                <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Protein</p>
+                <p className="text-2xl font-bold font-display">{macros.protein.grams}g</p>
+                <p className="text-xs text-muted-foreground">{macros.protein.calories} kcal</p>
+                <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: `${macros.protein.percentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{macros.protein.percentage}%</p>
+              </div>
+
+              {/* Carbs */}
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center mx-auto mb-2">
+                  <span className="text-xl">🍚</span>
+                </div>
+                <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">Carbs</p>
+                <p className="text-2xl font-bold font-display">{macros.carbs.grams}g</p>
+                <p className="text-xs text-muted-foreground">{macros.carbs.calories} kcal</p>
+                <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full bg-amber-500 rounded-full"
+                    style={{ width: `${macros.carbs.percentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{macros.carbs.percentage}%</p>
+              </div>
+
+              {/* Fat */}
+              <div className="p-4 rounded-2xl bg-card/60 backdrop-blur-sm text-center hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mx-auto mb-2">
+                  <span className="text-xl">🥑</span>
+                </div>
+                <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">Fat</p>
+                <p className="text-2xl font-bold font-display">{macros.fat.grams}g</p>
+                <p className="text-xs text-muted-foreground">{macros.fat.calories} kcal</p>
+                <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 rounded-full"
+                    style={{ width: `${macros.fat.percentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{macros.fat.percentage}%</p>
+              </div>
+            </div>
+
+            {/* Ratio Summary */}
+            <div className="p-4 rounded-xl bg-card/40 text-center">
+              <p className="text-sm font-medium mb-2">Macro Ratio</p>
+              <div className="flex items-center justify-center gap-2 text-lg font-bold font-display">
+                <span className="text-emerald-500">{macros.protein.percentage}%</span>
+                <span className="text-muted-foreground">:</span>
+                <span className="text-amber-500">{macros.carbs.percentage}%</span>
+                <span className="text-muted-foreground">:</span>
+                <span className="text-blue-500">{macros.fat.percentage}%</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Protein : Carbs : Fat</p>
+            </div>
+
+            {/* Save Button */}
+            <Button
+              onClick={handleSaveToDashboard}
+              className="w-full bg-gradient-to-r from-sage to-emerald-500 hover:from-sage/90 hover:to-emerald-500/90 text-white h-12 rounded-xl font-semibold shadow-lg shadow-sage/25"
+            >
+              <Check className="mr-2 h-4 w-4" />
+              Save Targets to Dashboard
+            </Button>
           </CardContent>
         </Card>
       )}

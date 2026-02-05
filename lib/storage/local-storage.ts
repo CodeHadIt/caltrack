@@ -1,7 +1,9 @@
 'use client'
 
-import { FoodItem, FoodLog, Profile, GuestData } from '@/types'
+import { FoodItem, FoodLog, Profile, GuestData, MacroRecommendation } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
+
+const MACRO_KEY = 'calories_tracker_macro_recommendation'
 
 const STORAGE_KEY = 'calories_tracker_guest_data'
 const GUEST_ID = 'guest-user'
@@ -92,4 +94,25 @@ export function getGuestProfile(): Partial<Profile> {
 export function clearGuestData(): void {
   if (typeof window === 'undefined') return
   localStorage.removeItem(STORAGE_KEY)
+}
+
+export function saveMacroRecommendation(macros: MacroRecommendation): void {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(MACRO_KEY, JSON.stringify(macros))
+}
+
+export function getMacroRecommendation(): MacroRecommendation | null {
+  if (typeof window === 'undefined') return null
+  const stored = localStorage.getItem(MACRO_KEY)
+  if (!stored) return null
+  try {
+    return JSON.parse(stored)
+  } catch {
+    return null
+  }
+}
+
+export function clearMacroRecommendation(): void {
+  if (typeof window === 'undefined') return
+  localStorage.removeItem(MACRO_KEY)
 }

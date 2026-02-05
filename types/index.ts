@@ -38,6 +38,26 @@ export interface TDEEResult {
   surplus: number
 }
 
+export interface MacroRecommendation {
+  calories: number
+  protein: { grams: number; calories: number; percentage: number }
+  carbs: { grams: number; calories: number; percentage: number }
+  fat: { grams: number; calories: number; percentage: number }
+  goal: Goal
+}
+
+export const GOAL_LABELS: Record<Goal, string> = {
+  lose: 'Cut / Lose Weight',
+  maintain: 'Maintain Weight',
+  gain: 'Bulk / Gain Weight',
+}
+
+export const GOAL_ICONS: Record<Goal, string> = {
+  lose: '🔥',
+  maintain: '⚖️',
+  gain: '💪',
+}
+
 export interface BodyFatResult {
   percentage: number
   category: string
