@@ -262,10 +262,11 @@ export function useFoodLog(userId: string | null, isGuest: boolean) {
     dates.forEach(date => caloriesByDate.set(date, 0))
 
     if (weekLogs) {
-      weekLogs.forEach((log: { date: string; weight_grams: number; food_item: { calories_per_100g: number } | null }) => {
-        if (log.food_item) {
+      weekLogs.forEach((log) => {
+        const foodItem = log.food_item as unknown as { calories_per_100g: number } | null
+        if (foodItem) {
           const current = caloriesByDate.get(log.date) || 0
-          caloriesByDate.set(log.date, current + (log.food_item.calories_per_100g * log.weight_grams / 100))
+          caloriesByDate.set(log.date, current + (foodItem.calories_per_100g * log.weight_grams / 100))
         }
       })
     }
