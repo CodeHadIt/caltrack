@@ -25,6 +25,9 @@ export const DEFAULT_FOODS: Omit<FoodItem, 'id' | 'created_at' | 'user_id'>[] = 
   { category_id: 'cat-proteins', name: 'Beef Steak', calories_per_100g: 271, protein_per_100g: 26, carbs_per_100g: 0, fat_per_100g: 18, image_url: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=200&h=200&fit=crop', is_default: true },
   { category_id: 'cat-proteins', name: 'Eggs', calories_per_100g: 155, protein_per_100g: 13, carbs_per_100g: 1.1, fat_per_100g: 11, image_url: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=200&h=200&fit=crop', is_default: true },
   { category_id: 'cat-proteins', name: 'Canned Tuna', calories_per_100g: 116, protein_per_100g: 26, carbs_per_100g: 0, fat_per_100g: 0.8, image_url: 'https://images.unsplash.com/photo-1597733153203-a54d0fbc47de?w=200&h=200&fit=crop', is_default: true },
+  { category_id: 'cat-proteins', name: 'Salmon', calories_per_100g: 208, protein_per_100g: 20, carbs_per_100g: 0, fat_per_100g: 13, image_url: 'https://images.unsplash.com/photo-1499125562588-29fb8a56b5d5?w=200&h=200&fit=crop', is_default: true },
+  { category_id: 'cat-proteins', name: 'Mackerel', calories_per_100g: 262, protein_per_100g: 24, carbs_per_100g: 0, fat_per_100g: 18, image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200&h=200&fit=crop', is_default: true },
+  { category_id: 'cat-proteins', name: 'Ground Beef', calories_per_100g: 254, protein_per_100g: 26, carbs_per_100g: 0, fat_per_100g: 17, image_url: 'https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=200&h=200&fit=crop', is_default: true },
 
   // Fats
   { category_id: 'cat-fats', name: 'Avocado', calories_per_100g: 160, protein_per_100g: 2, carbs_per_100g: 9, fat_per_100g: 15, image_url: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=200&h=200&fit=crop', is_default: true },
