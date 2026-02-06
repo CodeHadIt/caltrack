@@ -15,7 +15,7 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
 import { getMacroRecommendation } from '@/lib/storage/local-storage'
 import { getToday, formatDateShort } from '@/lib/utils'
-import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp, Share2, Sparkles } from 'lucide-react'
+import { Plus, Calendar, ChevronLeft, ChevronRight, TrendingUp, Share2, Sparkles, Calculator, Target } from 'lucide-react'
 import { MealTime, MacroRecommendation } from '@/types'
 import { toast } from 'sonner'
 
@@ -149,6 +149,34 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Set Calorie Target Prompt - show only if no macro targets saved */}
+        {!macroTargets && (
+          <Card className="mb-6 border-0 bg-gradient-to-r from-sky/10 via-blue-500/10 to-indigo-500/10 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-sky/10 blur-3xl" />
+            <CardContent className="py-5 relative">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-2xl bg-sky/10 flex items-center justify-center">
+                    <Target className="h-5 w-5 text-sky" />
+                  </div>
+                  <div>
+                    <p className="font-semibold font-display">Set Your Daily Calorie Target</p>
+                    <p className="text-sm text-muted-foreground">
+                      Use our TDEE calculator to get personalized calorie and macro recommendations
+                    </p>
+                  </div>
+                </div>
+                <Link href="/calculators">
+                  <Button className="bg-gradient-to-r from-sky to-blue-500 hover:from-sky/90 hover:to-blue-500/90 text-white rounded-xl shadow-lg shadow-sky/25 font-semibold">
+                    <Calculator className="mr-2 h-4 w-4" />
+                    Calculate Now
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Daily Summary */}
         <div className="mb-8">
           <DailySummary summary={summary} calorieGoal={2000} macroTargets={macroTargets} />
@@ -178,7 +206,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <CalorieChart data={weeklyData} goal={2000} />
+              <CalorieChart data={weeklyData} goal={macroTargets?.calories || 2000} />
             </CardContent>
           </Card>
 
@@ -192,7 +220,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <WeeklyTrend data={weeklyData} goal={2000} />
+              <WeeklyTrend data={weeklyData} goal={macroTargets?.calories || 2000} />
             </CardContent>
           </Card>
         </div>
