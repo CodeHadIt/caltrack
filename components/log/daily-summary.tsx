@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ProgressRing } from '@/components/charts/progress-ring'
 import { MacroPie } from '@/components/charts/macro-pie'
+import { CalorieWarning } from '@/components/ui/calorie-warning'
 import { DailySummary as DailySummaryType, MacroRecommendation, GOAL_LABELS, GOAL_ICONS } from '@/types'
 import { Flame, Beef, Wheat, Droplet, Target } from 'lucide-react'
 import Link from 'next/link'
@@ -39,6 +40,14 @@ export function DailySummary({ summary, calorieGoal = 2000, macroTargets }: Dail
             Adjust
           </Link>
         </div>
+      )}
+
+      {/* Calorie Warning */}
+      {macroTargets && (
+        <CalorieWarning
+          currentCalories={summary.totalCalories}
+          targetCalories={effectiveCalorieGoal}
+        />
       )}
 
       <Card className="border-0 bg-gradient-to-br from-coral/10 via-rose/10 to-peach/10 card-glow overflow-hidden relative">

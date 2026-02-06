@@ -18,12 +18,14 @@ import {
 import { AppWrapper } from '@/components/app-wrapper'
 import { FoodCard } from '@/components/food/food-card'
 import { CategoryTabs } from '@/components/food/category-tabs'
+import { CalorieWarning } from '@/components/ui/calorie-warning'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
+import { getMacroRecommendation } from '@/lib/storage/local-storage'
 import { toast } from 'sonner'
 import { calculateCaloriesFromFood, getToday } from '@/lib/utils'
 import { Search, ArrowLeft, UtensilsCrossed, Loader2, Plus, Check, X, CheckCircle2 } from 'lucide-react'
-import { FoodItem, MealTime, MEAL_TIME_LABELS, MEAL_TIME_ICONS } from '@/types'
+import { FoodItem, MealTime, MEAL_TIME_LABELS, MEAL_TIME_ICONS, MacroRecommendation } from '@/types'
 
 interface SelectedFoodEntry {
   food: FoodItem
@@ -40,15 +42,28 @@ function LogPageContent() {
   const [selectedFoods, setSelectedFoods] = useState<Map<string, SelectedFoodEntry>>(new Map())
   const [mealTime, setMealTime] = useState<MealTime>('lunch')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [macroTargets, setMacroTargets] = useState<MacroRecommendation | null>(null)
+  const [currentDayCalories, setCurrentDayCalories] = useState(0)
 
   const { userId, isGuest, isLoading: authLoading } = useAuth()
-  const { foods, fetchFoods, addLog, categories, isLoading } = useFoodLog(userId, isGuest)
+  const { foods, fetchFoods, addLog, fetchLogs, getDailySummary, categories, isLoading } = useFoodLog(userId, isGuest)
 
   useEffect(() => {
     if (!authLoading) {
       fetchFoods()
+      // Fetch today's logs to get current calorie count
+      fetchLogs(getToday()).then(() => {
+        const summary = getDailySummary(getToday())
+        setCurrentDayCalories(summary.totalCalories)
+      })
     }
-  }, [authLoading, fetchFoods])
+  }, [authLoading, fetchFoods, fetchLogs, getDailySummary])
+
+  // Load saved macro targets
+  useEffect(() => {
+    const savedMacros = getMacroRecommendation()
+    setMacroTargets(savedMacros)
+  }, [])
 
   useEffect(() => {
     if (preselectedFoodId && foods.length > 0) {
@@ -361,6 +376,15 @@ function LogPageContent() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Calorie Warning */}
+                    {macroTargets && totalNutrients.calories > 0 && (
+                      <CalorieWarning
+                        currentCalories={currentDayCalories}
+                        targetCalories={macroTargets.calories}
+                        additionalCalories={totalNutrients.calories}
+                      />
+                    )}
 
                     {/* Submit Button */}
                     <Button
