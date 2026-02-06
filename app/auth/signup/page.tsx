@@ -36,20 +36,27 @@ export default function SignupPage() {
 
     setIsLoading(true)
 
-    const { error } = await signUp(email, password)
+    try {
+      const { error } = await signUp(email, password)
 
-    if (error) {
-      toast.error('Failed to sign up', {
-        description: error.message,
+      if (error) {
+        toast.error('Failed to sign up', {
+          description: error.message,
+        })
+        setIsLoading(false)
+        return
+      }
+
+      toast.success('Account created!', {
+        description: 'Please check your email to verify your account.',
       })
+      // Force a full page refresh to ensure cookies are properly set on mobile
+      router.refresh()
+      router.push('/dashboard')
+    } catch (err) {
+      toast.error('Something went wrong. Please try again.')
       setIsLoading(false)
-      return
     }
-
-    toast.success('Account created!', {
-      description: 'Please check your email to verify your account.',
-    })
-    router.push('/dashboard')
   }
 
   return (

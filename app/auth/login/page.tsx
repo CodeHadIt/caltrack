@@ -24,18 +24,25 @@ export default function LoginPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    const { error } = await signIn(email, password)
+    try {
+      const { error } = await signIn(email, password)
 
-    if (error) {
-      toast.error('Failed to sign in', {
-        description: error.message,
-      })
+      if (error) {
+        toast.error('Failed to sign in', {
+          description: error.message,
+        })
+        setIsLoading(false)
+        return
+      }
+
+      toast.success('Welcome back!')
+      // Force a full page refresh to ensure cookies are properly set on mobile
+      router.refresh()
+      router.push('/dashboard')
+    } catch (err) {
+      toast.error('Something went wrong. Please try again.')
       setIsLoading(false)
-      return
     }
-
-    toast.success('Welcome back!')
-    router.push('/dashboard')
   }
 
   return (
