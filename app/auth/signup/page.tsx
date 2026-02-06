@@ -50,9 +50,8 @@ export default function SignupPage() {
       toast.success('Account created!', {
         description: 'Please check your email to verify your account.',
       })
-      // Force a full page refresh to ensure cookies are properly set on mobile
-      router.refresh()
-      router.push('/dashboard')
+      // Use hard redirect to ensure cookies are properly set on mobile
+      window.location.href = '/dashboard'
     } catch (err) {
       toast.error('Something went wrong. Please try again.')
       setIsLoading(false)

@@ -12,7 +12,9 @@
       "Bash(git commit:*)",
       "Bash(lsof:*)",
       "Bash(npx supabase --version)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git push:*)"
     ]
   }
 }
