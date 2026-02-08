@@ -46,18 +46,26 @@ function LogPageContent() {
   const [currentDayCalories, setCurrentDayCalories] = useState(0)
 
   const { userId, isGuest, isLoading: authLoading } = useAuth()
-  const { foods, fetchFoods, addLog, fetchLogs, getDailySummary, categories, isLoading } = useFoodLog(userId, isGuest)
+  const { foods, fetchFoods, addLog, fetchLogs, categories, isLoading } = useFoodLog(userId, isGuest)
 
   useEffect(() => {
     if (!authLoading) {
       fetchFoods()
       // Fetch today's logs to get current calorie count
-      fetchLogs(getToday()).then(() => {
-        const summary = getDailySummary(getToday())
-        setCurrentDayCalories(summary.totalCalories)
+      fetchLogs(getToday()).then((dayLogs) => {
+        if (dayLogs && Array.isArray(dayLogs)) {
+          const totalCalories = dayLogs.reduce((acc: number, log: any) => {
+            const food = log.food_item
+            if (food) {
+              return acc + food.calories_per_100g * log.weight_grams / 100
+            }
+            return acc
+          }, 0)
+          setCurrentDayCalories(Math.round(totalCalories))
+        }
       })
     }
-  }, [authLoading, fetchFoods, fetchLogs, getDailySummary])
+  }, [authLoading, fetchFoods, fetchLogs])
 
   // Load saved macro targets
   useEffect(() => {
