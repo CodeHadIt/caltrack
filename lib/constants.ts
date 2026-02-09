@@ -1,5 +1,31 @@
 import { FoodCategory, FoodItem } from '@/types'
 
+export interface MixVegetableOption {
+  name: string
+  emoji: string
+  calories_per_100g: number
+  protein_per_100g: number
+  carbs_per_100g: number
+  fat_per_100g: number
+}
+
+export const MIXED_VEGETABLES_OPTIONS: MixVegetableOption[] = [
+  { name: 'Broccoli', emoji: '🥦', calories_per_100g: 34, protein_per_100g: 2.8, carbs_per_100g: 7, fat_per_100g: 0.4 },
+  { name: 'Carrots', emoji: '🥕', calories_per_100g: 41, protein_per_100g: 0.9, carbs_per_100g: 10, fat_per_100g: 0.2 },
+  { name: 'Bell Pepper', emoji: '🫑', calories_per_100g: 31, protein_per_100g: 1, carbs_per_100g: 6, fat_per_100g: 0.3 },
+  { name: 'Peas', emoji: '🟢', calories_per_100g: 81, protein_per_100g: 5, carbs_per_100g: 14, fat_per_100g: 0.4 },
+  { name: 'Green Beans', emoji: '🫘', calories_per_100g: 31, protein_per_100g: 1.8, carbs_per_100g: 7, fat_per_100g: 0.1 },
+  { name: 'Corn', emoji: '🌽', calories_per_100g: 86, protein_per_100g: 3.3, carbs_per_100g: 19, fat_per_100g: 1.4 },
+  { name: 'Spinach', emoji: '🍃', calories_per_100g: 23, protein_per_100g: 2.9, carbs_per_100g: 3.6, fat_per_100g: 0.4 },
+  { name: 'Cabbage', emoji: '🥬', calories_per_100g: 25, protein_per_100g: 1.3, carbs_per_100g: 6, fat_per_100g: 0.1 },
+  { name: 'Tomato', emoji: '🍅', calories_per_100g: 18, protein_per_100g: 0.9, carbs_per_100g: 3.9, fat_per_100g: 0.2 },
+  { name: 'Onion', emoji: '🧅', calories_per_100g: 40, protein_per_100g: 1.1, carbs_per_100g: 9.3, fat_per_100g: 0.1 },
+  { name: 'Cauliflower', emoji: '🤍', calories_per_100g: 25, protein_per_100g: 1.9, carbs_per_100g: 5, fat_per_100g: 0.3 },
+  { name: 'Zucchini', emoji: '🥒', calories_per_100g: 17, protein_per_100g: 1.2, carbs_per_100g: 3.1, fat_per_100g: 0.3 },
+]
+
+export const MIXED_VEGETABLES_NAME = 'Mixed Vegetables'
+
 export const DEFAULT_CATEGORIES: Omit<FoodCategory, 'created_at'>[] = [
   { id: 'cat-carbs', name: 'Carbs', icon: '🍚', color: '#f59e0b' },
   { id: 'cat-proteins', name: 'Proteins', icon: '🥩', color: '#ef4444' },
@@ -52,6 +78,9 @@ export const DEFAULT_FOODS: Omit<FoodItem, 'id' | 'created_at' | 'user_id'>[] = 
   // Snacks
   { category_id: 'cat-snacks', name: 'Plantain Chips', calories_per_100g: 519, protein_per_100g: 2, carbs_per_100g: 58, fat_per_100g: 31, image_url: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200&h=200&fit=crop', is_default: true },
   { category_id: 'cat-snacks', name: 'Biscuit', calories_per_100g: 502, protein_per_100g: 6, carbs_per_100g: 62, fat_per_100g: 25, image_url: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&h=200&fit=crop', is_default: true },
+
+  // Mixed Vegetables
+  { category_id: 'cat-vegetables', name: 'Mixed Vegetables', calories_per_100g: 38, protein_per_100g: 2, carbs_per_100g: 7.8, fat_per_100g: 0.3, image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop', is_default: true },
 ]
 
 export const BODY_FAT_CATEGORIES = {

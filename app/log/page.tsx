@@ -18,7 +18,9 @@ import {
 import { AppWrapper } from '@/components/app-wrapper'
 import { FoodCard } from '@/components/food/food-card'
 import { CategoryTabs } from '@/components/food/category-tabs'
+import { VegetableMixCustomizer, getAveragedNutrients } from '@/components/food/vegetable-mix-customizer'
 import { CalorieWarning } from '@/components/ui/calorie-warning'
+import { MIXED_VEGETABLES_NAME, MIXED_VEGETABLES_OPTIONS } from '@/lib/constants'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useFoodLog } from '@/lib/hooks/use-food-log'
 import { getMacroRecommendation } from '@/lib/storage/local-storage'
@@ -30,6 +32,7 @@ import { FoodItem, MealTime, MEAL_TIME_LABELS, MEAL_TIME_ICONS, MacroRecommendat
 interface SelectedFoodEntry {
   food: FoodItem
   weight: number
+  mixVegetables?: Set<string>
 }
 
 function LogPageContent() {
@@ -77,7 +80,11 @@ function LogPageContent() {
     if (preselectedFoodId && foods.length > 0) {
       const food = foods.find((f) => f.id === preselectedFoodId)
       if (food) {
-        setSelectedFoods(new Map([[food.id, { food, weight: 100 }]]))
+        const entry: SelectedFoodEntry = { food, weight: 100 }
+        if (food.name === MIXED_VEGETABLES_NAME) {
+          entry.mixVegetables = new Set(MIXED_VEGETABLES_OPTIONS.map(v => v.name))
+        }
+        setSelectedFoods(new Map([[food.id, entry]]))
       }
     }
   }, [preselectedFoodId, foods])
@@ -96,8 +103,30 @@ function LogPageContent() {
       if (newMap.has(food.id)) {
         newMap.delete(food.id)
       } else {
-        newMap.set(food.id, { food, weight: 100 })
+        const entry: SelectedFoodEntry = { food, weight: 100 }
+        if (food.name === MIXED_VEGETABLES_NAME) {
+          entry.mixVegetables = new Set(MIXED_VEGETABLES_OPTIONS.map(v => v.name))
+        }
+        newMap.set(food.id, entry)
       }
+      return newMap
+    })
+  }
+
+  const handleMixVegetablesChange = (foodId: string, selected: Set<string>) => {
+    setSelectedFoods(prev => {
+      const newMap = new Map(prev)
+      const entry = newMap.get(foodId)
+      if (!entry) return prev
+      const nutrients = getAveragedNutrients(selected)
+      const updatedFood = {
+        ...entry.food,
+        calories_per_100g: nutrients.calories,
+        protein_per_100g: nutrients.protein,
+        carbs_per_100g: nutrients.carbs,
+        fat_per_100g: nutrients.fat,
+      }
+      newMap.set(foodId, { ...entry, food: updatedFood, mixVegetables: selected })
       return newMap
     })
   }
@@ -266,7 +295,7 @@ function LogPageContent() {
                 {selectedFoods.size > 0 ? (
                   <div className="space-y-6">
                     {/* Selected Foods List */}
-                    <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
                       {Array.from(selectedFoods.entries()).map(([foodId, entry]) => (
                         <div key={foodId} className="p-4 rounded-xl bg-muted/50 border border-coral/10">
                           <div className="flex items-start justify-between mb-3">
@@ -285,6 +314,16 @@ function LogPageContent() {
                               <X className="h-4 w-4" />
                             </Button>
                           </div>
+
+                          {/* Vegetable Mix Customizer */}
+                          {entry.mixVegetables && (
+                            <div className="mb-3">
+                              <VegetableMixCustomizer
+                                selected={entry.mixVegetables}
+                                onSelectionChange={(sel) => handleMixVegetablesChange(foodId, sel)}
+                              />
+                            </div>
+                          )}
 
                           {/* Weight Controls */}
                           <div className="space-y-3">
