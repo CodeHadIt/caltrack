@@ -25,7 +25,6 @@ export async function updateSession(request: NextRequest) {
               // Ensure cookies work on mobile browsers
               sameSite: 'lax',
               secure: process.env.NODE_ENV === 'production',
-              httpOnly: true,
             })
           )
         },
